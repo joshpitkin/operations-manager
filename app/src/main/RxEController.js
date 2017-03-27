@@ -1,7 +1,7 @@
 (function(){
 
   angular
-       .module('clients')
+       .module('main')
        .controller('RxEController', [
           'RxEService', '$mdSidenav', '$mdBottomSheet', '$timeout', '$log',
           RxEController
@@ -14,22 +14,14 @@
    * @constructor
    */
   function RxEController( RxEService, $mdSidenav, $mdBottomSheet, $timeout, $log ) {
-    var self = this;
+    var self = this
 
-    self.selected     = null;
-    self.routines        = [ ];
-    self.selectUser   = selectUser;
-    self.toggleList   = toggleUsersList;
-    self.makeContact  = makeContact;
-
-    // Load all registered users
-
-    RxEService
-          .loadRoutines()
-          .then( function( routines ) {
-            self.routines    = [].concat(routines);
-            self.selected = routines[0];
-          });
+    self.routines     = RxEService.routines
+    self.selected     = null
+    self.selectRoutine   = selectRoutine
+    self.toggleList   = toggleUsersList
+    self.makeContact  = makeContact
+    self.clients = RxEService.getClients()
 
     // *********************************
     // Internal methods
@@ -46,8 +38,8 @@
      * Select the current avatars
      * @param menuId
      */
-    function selectUser ( user ) {
-      self.selected = angular.isNumber(user) ? self.users[user] : user;
+    function selectRoutine ( rt ) {
+      self.selected = angular.isNumber(rt) ? self.routinees[rt] : rt;
     }
 
     /**
@@ -57,7 +49,7 @@
 
         $mdBottomSheet.show({
           controllerAs  : "vm",
-          templateUrl   : './src/users/view/contactSheet.html',
+          templateUrl   : './src/main/views/contactSheet.html',
           controller    : [ '$mdBottomSheet', ContactSheetController],
           parent        : angular.element(document.getElementById('content'))
         }).then(function(clickedItem) {
@@ -78,7 +70,7 @@
           this.contactUser = function(action) {
             // The actually contact process has not been implemented...
             // so just hide the bottomSheet
-
+            console.log(RxEService.config)
             $mdBottomSheet.hide(action);
           };
         }
