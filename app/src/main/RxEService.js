@@ -3,7 +3,17 @@
   angular.module('main').service('RxEService', ['$q','$http', RxEService]);
 
   function RxEService($q,$http){
+    window.app = {
+      engine:'http://localhost/rxe-api/operations-manager-engine.php',
+      user:{},
+      clients:[],
+      processors:[],
+      employees:[],
+      rxebate:{},
+      config:{}
+    }
     var routines = [{
+
         name:'Manage Processors',
         icon:'business',
         description:'manage Processor'
@@ -51,43 +61,36 @@
 
     // Promise-based API
     return {
-      engine:'http://localhost/rxe-api/operations-manager-engine.php'
-      ,user:{}
-      ,config:{}
-      ,clients:[]
-      ,processors:[]
-      ,employees:[]
-      ,rxebate:{}
-      ,routines:routines
+      routines:routines
       ,getClients: function(){
-        if(this.clients.length == 0){
+        if(window.app.clients.length == 0){
           $http({
                method : "GET",
-               url : this.engine + "?cmd=get-clients"
+               url : window.app.engine + "?cmd=get-clients"
            }).then(function mySucces(response) {
-                RxEService.clients = response.data.data //(response.data.success)?  buildConfig(response.data.data):{}
-                return RxEService.clients
+                window.app.clients = response.data.data //(response.data.success)?  buildConfig(response.data.data):{}
+                return window.app.clients
            }, function myError(response) {
-              RxEService.clients = []
+              window.app.clients = []
               return [];
            });
         }else{
-          return this.clients
+          return window.app.clients
         }
       },getConfig:function(){
-        if(this.config == {}){
+        if(window.app.config == {}){
           $http({
                method : "GET",
                url : this.engine + "?cmd=get-config"
            }).then(function mySucces(response) {
-                RxEService.config = response //(response.data.success)?  buildConfig(response.data.data):{}
-               return RxEService.config
+                window.app.config = response //(response.data.success)?  buildConfig(response.data.data):{}
+               return window.app.config
            }, function myError(response) {
-               RxEService.config = {}
+               window.app.config = {}
                return {};
            })
         }else{
-          return this.config
+          return window.app.config
         }
       }
     };
