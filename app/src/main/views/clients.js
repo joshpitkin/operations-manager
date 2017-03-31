@@ -6,9 +6,9 @@
 
  function clientsController(RxEService){
      var controller = ['$scope','$mdDialog',function ($scope,$mdDialog) {
-         console.log(RxEService.config)
            $scope.client = {}
            $scope.clients = RxEService.getClients()
+           $scope.eTypes = [{type:'A'},{type:'B'}]
            $scope.loadClient = function(client_id){
              $scope.currentTab = 'Contact'
            }
@@ -24,7 +24,7 @@
               $mdDialog.show(confirm).then(function(newClient) {
                 if(newClient.search(/[^a-zA-Z]+/) < 0){
                   $scope.client.client_id = newClient
-                  $scope.currentTab = 'Contact'  
+                  $scope.currentTab = 'Contact'
                 }
               }, function() {});
             };
