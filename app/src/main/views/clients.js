@@ -11,6 +11,7 @@
            $scope.eTypes = [{type:'A'},{type:'B'}]
            $scope.loadClient = function(client_id){
              $scope.currentTab = 'Contact'
+             $scope.client = RxEService.getClientInfo(client_id)
            }
            $scope.showClientAdd = function(ev) {
               var confirm = $mdDialog.prompt()

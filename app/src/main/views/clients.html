@@ -1,29 +1,25 @@
 <md-content>
-  <div layout="row">
-    <md-input-container flex="40">
-      <md-select ng-change="loadClient(client.client_id)" ng-model="client.client_id" placeholder="Select Client">
-        <md-option ng-repeat="client in clients" value="{{client.client_id}}">{{client.client_id}}</md-option>
-      </md-select>
-      <md-button class="md-fab md-mini" ng-click="showClientAdd($event)">
-        <b>+</b>
-      </md-button>
-      <md-switch class="md-primary" name="special" ng-model="project.special" required>
-        {{(project.special)?'Active':'Inactive'}}
-      </md-switch>
-      <div ng-messages="manageForm.special.$error" multiple>
-        <div ng-message="required">
-          You must enable all special options before you can proceed.
-        </div>
+  <md-toolbar class='rx-select-client'>
+      <div class="md-toolbar-tools">
+        <md-input-container flex="40">
+          <md-select ng-change="loadClient(client.client_id)" ng-model="client.client_id" placeholder="Select Client">
+            <md-option ng-repeat="client in clients" value="{{client.client_id}}">{{client.client_id}}</md-option>
+          </md-select>
+        </md-input-container>
+        <md-button ng-click="showClientAdd($event)" class="md-raised" aria-label="Learn More">
+          Add
+        </md-button>
+        <span flex></span>
+        <md-switch class="md-headline" name="special" ng-model="project.special">{{(project.special)?'Active':'Inactive'}}</md-switch>
       </div>
-    </md-input-container>
-  </div>
+    </md-toolbar>
   <div ng-cloak="" class="tabsdemoDynamicHeight" ng-app="MyApp">
       <md-tabs md-dynamic-height="" md-border-bottom="">
         <md-tab label="Contact">
           <md-content class="md-padding">
             <form name="manageForm">
               <section>
-                <md-subheader class="md-primary">Entity</md-subheader>
+                <h1 class="md-headline">Entity</h1>
                 <div layout="row">
                   <md-input-container flex="60">
                     <label>Entity Name</label>
@@ -77,7 +73,7 @@
               </section>
 
               <section>
-                <md-subheader class="md-primary">Point of Contact</md-subheader>
+                <h1 class="md-headline">Point of Contact</h1>
                 <div layout="row">
                   <md-input-container flex="60">
                     <label>Contact Name</label>
@@ -95,16 +91,28 @@
                   </md-input-container>
 
                 </div>
-                <md-input-container>
-                  <label>Contact Email</label>
-                  <input required type="email" name="clientEmail" ng-model="project.clientEmail"
-                         minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" />
-                  <div ng-messages="manageForm.clientEmail.$error" role="alert">
-                    <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
-                      Your email must be between 10 and 100 characters long and look like an e-mail address.
+                <div layout="row">
+                  <md-input-container flex="50">
+                    <label>Contact Email</label>
+                    <input required type="email" name="clientEmail" ng-model="project.clientEmail"
+                           minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" />
+                    <div ng-messages="manageForm.clientEmail.$error" role="alert">
+                      <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                        Your email must be between 10 and 100 characters long and look like an e-mail address.
+                      </div>
                     </div>
-                  </div>
-                </md-input-container>
+                  </md-input-container>
+                  <md-input-container flex>
+                    <label>Contact Phone</label>
+                    <input required name="clientEmail" ng-model="project.clientEmail"
+                           minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" />
+                    <div ng-messages="manageForm.clientEmail.$error" role="alert">
+                      <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+                        Your email must be between 10 and 100 characters long and look like an e-mail address.
+                      </div>
+                    </div>
+                  </md-input-container>
+                </div>
               </section>
             </form>
           </md-content>
@@ -112,39 +120,69 @@
         <md-tab label="Legal">
           <md-content class="md-padding">
             <section>
-              <md-subheader class="md-primary">Aggreements</md-subheader>
-              <div layout="row" layout-sm="column">
-                <md-input-container flex="40">
+              <h1 class="md-headline">Aggreements</h1>
+              <div layout="row">
+                <md-input-container flex="30">
                   <label>NDA</label>
                   <input required name="entity" ng-model="client.entity">
                   <div ng-messages="manageForm.entity.$error">
                     <div ng-message="required">This is required.</div>
                   </div>
                 </md-input-container>
-                <md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"></md-datepicker>
-                <md-button class="md-raised md-primary">Download</md-button>
+                <div flex="20">
+                  <md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"></md-datepicker>
+                </div>
+                <span flex></span>
+                <div>
+                  <md-button class="md-icon-button md-accent" aria-label="Favorite">
+                    <ng-md-icon icon="cloud_download"></ng-md-icon>
+                  </md-button>
+                  <md-button class="md-icon-button" aria-label="More">
+                    <ng-md-icon icon="cloud_upload"></ng-md-icon>
+                  </md-button>
+                </div>
               </div>
-              <div layout="row" layout-sm="column">
-                <md-input-container flex="40">
+              <div layout="row">
+                <md-input-container flex="30">
                   <label>BAA</label>
                   <input required name="entity" ng-model="client.entity">
                   <div ng-messages="manageForm.entity.$error">
                     <div ng-message="required">This is required.</div>
                   </div>
                 </md-input-container>
-                <md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"></md-datepicker>
-                <md-button class="md-raised md-primary">Download</md-button>
+                <div flex="20">
+                  <md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"></md-datepicker>
+                </div>
+                <span flex></span>
+                <div>
+                  <md-button class="md-icon-button md-accent" aria-label="Favorite">
+                    <ng-md-icon icon="cloud_download"></ng-md-icon>
+                  </md-button>
+                  <md-button class="md-icon-button" aria-label="More">
+                    <ng-md-icon icon="cloud_upload"></ng-md-icon>
+                  </md-button>
+                </div>
               </div>
-              <div layout="row" layout-sm="column">
-                <md-input-container flex="40">
+              <div layout="row">
+                <md-input-container flex="30">
                   <label>Service Aggreement</label>
                   <input required name="entity" ng-model="client.entity">
                   <div ng-messages="manageForm.entity.$error">
                     <div ng-message="required">This is required.</div>
                   </div>
                 </md-input-container>
-                <md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"></md-datepicker>
-                <md-button class="md-raised md-primary">Download</md-button>
+                <div flex="20">
+                  <md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"></md-datepicker>
+                </div>
+                <span flex></span>
+                <div>
+                  <md-button class="md-icon-button md-accent" aria-label="Favorite">
+                    <ng-md-icon icon="cloud_download"></ng-md-icon>
+                  </md-button>
+                  <md-button class="md-icon-button" aria-label="More">
+                    <ng-md-icon icon="cloud_upload"></ng-md-icon>
+                  </md-button>
+                </div>
               </div>
             </section>
 
@@ -152,10 +190,41 @@
 
           </md-content>
         </md-tab>
-        <md-tab label="Banking">
+        <md-tab label="Financial">
           <md-content class="md-padding">
             <section>
-              <md-subheader class="md-primary">Bank Information</md-subheader>
+              <h1 class="md-headline">Tax</h1>
+              <md-input-container flex="30">
+                <label>Federal EIN</label>
+                <input required name="entity" ng-model="client.entity">
+                <div ng-messages="manageForm.entity.$error">
+                  <div ng-message="required">This is required.</div>
+                </div>
+              </md-input-container>
+              <div layout="row">
+                <md-input-container flex="30">
+                  <label>W9</label>
+                  <input required name="entity" ng-model="client.entity">
+                  <div ng-messages="manageForm.entity.$error">
+                    <div ng-message="required">This is required.</div>
+                  </div>
+                </md-input-container>
+                <div flex="20">
+                  <md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"></md-datepicker>
+                </div>
+                <span flex></span>
+                <div>
+                  <md-button class="md-icon-button md-accent" aria-label="Favorite">
+                    <ng-md-icon icon="cloud_download"></ng-md-icon>
+                  </md-button>
+                  <md-button class="md-icon-button" aria-label="More">
+                    <ng-md-icon icon="cloud_upload"></ng-md-icon>
+                  </md-button>
+                </div>
+              </div>
+            </section>
+            <section>
+              <h1 class="md-headline">Bank Information</h1>
               <div layout="row">
                 <md-input-container flex="60">
                   <label>Bank Name</label>
@@ -201,7 +270,7 @@
               </div>
             </section>
             <section>
-              <md-subheader class="md-primary">Account Information</md-subheader>
+              <h1 class="md-headline">Account Information</h1>
               <div layout="row">
                 <md-input-container flex="60">
                   <label>Account Holder Name</label>
@@ -240,10 +309,29 @@
             </section>
           </md-content>
         </md-tab>
+        <md-tab label="History">
+          <md-content class="md-padding">
+            <section>
+              <h1 class="md-headline">Rebate Performance</h1>
+              <hc-pie items="client.rebate_history"></hc-pie>
+            </section>
+            <section>
+              <h1 class="md-headline">Client Activity</h1>
+              <md-list flex="">
+                <md-list-item class="md-3-line" ng-repeat="item in client.activity" ng-click="null">
+                 <div class="md-list-item-text" layout="column">
+                   <h4><i>{{ item.change_user }} on {{item.change_datetime}}<i></h4>
+                   <b>{{ item.change_description }}</b>
+                 </div>
+               </md-list-item>
+             </md-list>
+            </section>
+          </md-content>
+        </md-tab>
         <md-tab label="Scripting">
           <md-content class="md-padding">
             <section>
-              <md-subheader class="md-primary">Stored Procedure</md-subheader>
+              <h1 class="md-headline">Stored Procedure</h1>
             </section>
           </md-content>
         </md-tab>

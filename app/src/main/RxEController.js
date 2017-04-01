@@ -46,7 +46,6 @@
      * Show the Contact view in the bottom sheet
      */
     function makeContact(selectedUser) {
-
         $mdBottomSheet.show({
           controllerAs  : "vm",
           templateUrl   : './src/main/views/contactSheet.html',

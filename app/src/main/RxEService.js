@@ -13,7 +13,6 @@
       config:{}
     }
     var routines = [{
-
         name:'Manage Processors',
         icon:'business',
         description:'manage Processor'
@@ -92,6 +91,37 @@
         }else{
           return window.app.config
         }
+      },getClientInfo: function(client_id){
+          return {
+            rebate_history:[
+              ['ideas1', 1],
+              ['ideas2', 8],
+              ['ideas3', 5]
+            ],
+            activity:[
+              {client_id:'RxETest',
+                change_description: "teset change",
+                change_user: "NWEAVER",
+                change_datetime: "3/12/85"
+              },{client_id:'RxETest',
+                change_description: "teset change",
+                change_user: "NWEAVER",
+                change_datetime: "3/12/85"
+              },{client_id:'RxETest',
+                change_description: "teset change",
+                change_user: "NWEAVER",
+                change_datetime: "3/12/85"
+              }
+            ]
+          }
+          // $http({
+          //      method : "GET",
+          //      url : window.app.engine + "?cmd=get-client-info&client_id="+client_id
+          //  }).then(function mySucces(response) {
+          //       return window.app.clients
+          //  }, function myError(response) {
+          //     return {};
+          //  });
       }
     };
   }
