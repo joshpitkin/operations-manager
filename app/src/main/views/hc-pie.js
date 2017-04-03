@@ -10,16 +10,16 @@
            },
            template: '<div id="container" style="margin: 0 auto">not working</div>',
            link: function (scope, element, attrs) {
-             console.log(3);
-             var chart = new Highcharts.Chart({
+             //***  Chart Object
+             var chartObj = {
                chart: {
                  renderTo: 'container',
                  plotBackgroundColor: null,
                  plotBorderWidth: null,
-                 plotShadow: false
+                 plotShadow: false,
                },
-               title: {
-                 text: 'Browser market shares at a specific website, 2010'
+               title:{
+                 text: ''
                },
                tooltip: {
                  pointFormat: '{series.name}: <b>{point.percentage}%</b>',
@@ -39,12 +39,17 @@
                    }
                  }
                },
+               xAxis: {
+                  categories: ['Jan', 'Feb', 'Mar']
+              },
                series: [{
-                 type: 'pie',
-                 name: 'Browser share',
+                 type: 'column',
+                 name: 'Rebate History',
                  data: scope.items
                }]
-             });
+             }
+             // *** End Chart Object
+             var chart = new Highcharts.Chart(chartObj);
              scope.$watch("items", function (newValue) {
                chart.series[0].setData(newValue, true);
              }, true);

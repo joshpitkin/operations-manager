@@ -5,32 +5,36 @@
   function RxEService($q,$http){
     window.app = {
       engine:'http://localhost/rxe-api/operations-manager-engine.php',
-      user:{},
+      user:{user_id:'NWEAVER'},
       clients:[],
       processors:[],
       employees:[],
       rxebate:{},
       config:{}
     }
-    var routines = [{
-        name:'Manage Processors',
+    var utilities = [{
+        name:'Processors',
         icon:'business',
-        description:'manage Processor'
+        description:'manage Processor',
+        tabs:['Contact','History','Financial','Documents','Scripting']
       },
       {
-        name: 'Manage Clients',
+        name: 'Clients',
         icon: 'contacts',
-        description: 'manage clients'
+        description: 'manage clients',
+        tabs:['Contact','History','Financial','Documents','Scripting']
       },
       {
-        name: 'Manage Employees',
+        name: 'Employees',
         icon: 'people',
-        description: 'Manage Employees'
+        description: 'Manage Employees',
+        tabs:['Contact','Financial','Documents']
       },
       {
-        name: 'Process Claims',
+        name: 'Claims',
         icon: 'timeline',
-        description: 'Process Claims'
+        description: 'Process Claims',
+        tabs:[]
       }];
 
     // function treeify(root, allRows) {
@@ -60,8 +64,8 @@
 
     // Promise-based API
     return {
-      routines:routines
-      ,getClients: function(){
+      utilities:utilities,
+      getClients: function(){
         if(window.app.clients.length == 0){
           $http({
                method : "GET",
@@ -76,7 +80,8 @@
         }else{
           return window.app.clients
         }
-      },getConfig:function(){
+      },
+      getConfig:function(){
         if(window.app.config == {}){
           $http({
                method : "GET",
@@ -91,28 +96,77 @@
         }else{
           return window.app.config
         }
-      },getClientInfo: function(client_id){
+      },
+      getUtilityInfo: function(id,utility){
+        /*
+          utilities: (processor,client,employee)
+          id: (processor_id,client_id,employee_id)
+        */
           return {
-            rebate_history:[
-              ['ideas1', 1],
-              ['ideas2', 8],
-              ['ideas3', 5]
-            ],
-            activity:[
-              {client_id:'RxETest',
-                change_description: "teset change",
-                change_user: "NWEAVER",
-                change_datetime: "3/12/85"
-              },{client_id:'RxETest',
-                change_description: "teset change",
-                change_user: "NWEAVER",
-                change_datetime: "3/12/85"
-              },{client_id:'RxETest',
-                change_description: "teset change",
-                change_user: "NWEAVER",
-                change_datetime: "3/12/85"
-              }
-            ]
+              client_id:'RxETEST',
+              active:true,
+              entity_name:'test',
+              entity_type:'test',
+              entity_address:'123 road',
+              entity_city:'houston',
+              entity_state:'tx',
+              entity_zip:'77777',
+              entity_EIN:'123-4123098',
+              bank_name:'wells fargo',
+              bank_address:'123 road street',
+              bank_city:'sugar land',
+              bank_state:'tx',
+              bank_zip:'88888',
+              bank_account_holder:'mdsccripts',
+              bank_account_number:'123123132',
+              bank_routing_number_direct_deposit:'12312',
+              bank_routing_number_wire:'12312',
+              contact_name:'frank',
+              contact_position:'president',
+              contact_email:'frank@gmail',
+              contact_phone:'123-123-1234',
+              documents:[{
+                  title:'NDA',
+                  date:'3/12/85',
+                  location:'http://www.google.com'
+                },{
+                  title:'BAA',
+                  date:'3/12/85',
+                  location:'http://www.google.com'
+                },{
+                  title:'Service Aggreement',
+                  date:null,
+                  location:null
+                },{
+                  title:'W9',
+                  date:null,
+                  location:null
+                }],
+              rebate_history:[{
+                  name: 'Point 1',
+                  y: 24,
+                }, {
+                    name: 'Point 2',
+                    y: 15
+                }, {
+                    name: 'Point 3',
+                    y: 18
+                }],
+              activity:[{
+                    client_id:'RxETest',
+                    change_description: "teset change",
+                    change_user: "NWEAVER",
+                    change_datetime: "3/12/85"
+                  },{client_id:'RxETest',
+                    change_description: "teset change",
+                    change_user: "NWEAVER",
+                    change_datetime: "3/12/85"
+                  },{client_id:'RxETest',
+                    change_description: "teset change",
+                    change_user: "NWEAVER",
+                    change_datetime: "3/12/85"
+                  }
+                ]
           }
           // $http({
           //      method : "GET",
@@ -122,6 +176,12 @@
           //  }, function myError(response) {
           //     return {};
           //  });
+      },
+      getUnitedStates: function(){
+        return getUnitedStates()
+      },
+      getEntityTypes: function(){
+        return [{type:'A'},{type:'B'},{type:'C'},{type:'D'}]
       }
     };
   }

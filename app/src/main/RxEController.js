@@ -1,7 +1,7 @@
 (function(){
 
   angular
-       .module('main')
+       .module('main',[])
        .controller('RxEController', [
           'RxEService', '$mdSidenav', '$mdBottomSheet', '$timeout', '$log',
           RxEController
@@ -16,65 +16,46 @@
   function RxEController( RxEService, $mdSidenav, $mdBottomSheet, $timeout, $log ) {
     var self = this
 
-    self.routines     = RxEService.routines
-    self.selected     = null
-    self.selectRoutine   = selectRoutine
-    self.toggleList   = toggleUsersList
-    self.makeContact  = makeContact
-    self.clients = RxEService.getClients()
-
-    // *********************************
-    // Internal methods
-    // *********************************
-
-    /**
-     * Hide or Show the 'left' sideNav area
-     */
-    function toggleUsersList() {
+    self.utilities     = RxEService.utilities
+    self.selectedUtility     = null
+    self.toggleUtility   = function( ut ) {
+      self.selectedUtility = angular.isNumber(ut) ? self.utilities[rt] : ut;
+    }
+    self.toggleList   = function(){
       $mdSidenav('left').toggle();
     }
+    self.clients = RxEService.getClients()
 
-    /**
-     * Select the current avatars
-     * @param menuId
-     */
-    function selectRoutine ( rt ) {
-      self.selected = angular.isNumber(rt) ? self.routinees[rt] : rt;
-    }
-
-    /**
-     * Show the Contact view in the bottom sheet
-     */
-    function makeContact(selectedUser) {
-        $mdBottomSheet.show({
-          controllerAs  : "vm",
-          templateUrl   : './src/main/views/contactSheet.html',
-          controller    : [ '$mdBottomSheet', ContactSheetController],
-          parent        : angular.element(document.getElementById('content'))
-        }).then(function(clickedItem) {
-          $log.debug( clickedItem.name + ' clicked!');
-        });
+    // self.makeContact  = makeContact
+    // function makeContact(selectedUser) {
+    //     $mdBottomSheet.show({
+    //       controllerAs  : "vm",
+    //       templateUrl   : './src/main/views/contactSheet.html',
+    //       controller    : [ '$mdBottomSheet', ContactSheetController],
+    //       parent        : angular.element(document.getElementById('content'))
+    //     }).then(function(clickedItem) {
+    //       $log.debug( clickedItem.name + ' clicked!');
+    //     });
 
         /**
          * User ContactSheet controller
          */
-        function ContactSheetController( $mdBottomSheet ) {
-          this.user = selectedUser;
-          this.items = [
-            { name: 'Phone'       , icon: 'phone'       , icon_url: 'assets/svg/phone.svg'},
-            { name: 'Twitter'     , icon: 'twitter'     , icon_url: 'assets/svg/twitter.svg'},
-            { name: 'Google+'     , icon: 'google_plus' , icon_url: 'assets/svg/google_plus.svg'},
-            { name: 'Hangout'     , icon: 'hangouts'    , icon_url: 'assets/svg/hangouts.svg'}
-          ];
-          this.contactUser = function(action) {
-            // The actually contact process has not been implemented...
-            // so just hide the bottomSheet
-            console.log(RxEService.config)
-            $mdBottomSheet.hide(action);
-          };
-        }
-    }
+        // function ContactSheetController( $mdBottomSheet ) {
+        //   this.user = selectedUser;
+        //   this.items = [
+        //     { name: 'Phone'       , icon: 'phone'       , icon_url: 'assets/svg/phone.svg'},
+        //     { name: 'Twitter'     , icon: 'twitter'     , icon_url: 'assets/svg/twitter.svg'},
+        //     { name: 'Google+'     , icon: 'google_plus' , icon_url: 'assets/svg/google_plus.svg'},
+        //     { name: 'Hangout'     , icon: 'hangouts'    , icon_url: 'assets/svg/hangouts.svg'}
+        //   ];
+        //   this.contactUser = function(action) {
+        //     // The actually contact process has not been implemented...
+        //     // so just hide the bottomSheet
+        //     console.log(RxEService.config)
+        //     $mdBottomSheet.hide(action);
+        //   };
+        // }
+    // }
 
   }
-
 })();
