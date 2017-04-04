@@ -125,6 +125,7 @@
               contact_position:'president',
               contact_email:'frank@gmail',
               contact_phone:'123-123-1234',
+              format_instructions:'',
               documents:[{
                   title:'NDA',
                   date:'3/12/85',

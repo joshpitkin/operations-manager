@@ -254,19 +254,23 @@
         <md-tab ng-if="(config.tabs.indexOf('Documents') >= 0)" label="Documents">
           <md-content class="md-padding">
             <section>
-              <h1 class="md-headline">Aggreements</h1>
-              <!-- <md-list>
-                <md-list-item class="noright">
-                  <p>TEST</p>
-                  <md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>
-                  <md-button class="md-icon-button md-accent md-secondary" aria-label="Favorite">
-                    <ng-md-icon icon="cloud_download"></ng-md-icon>
-                  </md-button>
-                  <md-button class="md-icon-button md-secondary" aria-label="More">
-                    <ng-md-icon icon="cloud_upload"></ng-md-icon>
-                  </md-button>
-                </md-list-item>
-              </md-list> -->
+              <!-- <h1 class="md-headline">Aggreements</h1> -->
+                <div layout="row" layout-align="center center">
+                  <div
+                    ngf-drop
+                    ngf-select
+                    ng-model="client.files"
+                    class="drop-box"
+                    ngf-drag-over-class="'dragover'"
+                    ngf-multiple="true"
+                    ngf-allow-dir="true"
+                    accept="image/*,application/pdf"
+                    ngf-pattern="'image/*,application/pdf'">Upload File</br><ng-md-icon class="md-secondary" icon="cloud_upload"></ng-md-icon>
+                  </div>
+                </div>
+                <ul>
+                    <li ng-repeat="f in client.files" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}</li>
+                </ul>
               <md-list>
                 <md-list-item ng-repeat="doc in client.documents"  class="noright">
                   <!-- <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" /> -->
@@ -334,7 +338,8 @@
         <md-tab ng-if="(config.tabs.indexOf('Scripting') >= 0)" label="Scripting">
           <md-content class="md-padding">
             <section>
-              <h1 class="md-headline">Stored Procedure</h1>
+              <h1 class="md-headline">Formatting Instructions</h1>
+              <trix-editor angular-trix ng-model="client.format_instructions"></trix-editor>
             </section>
           </md-content>
         </md-tab>
