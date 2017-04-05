@@ -6,7 +6,9 @@
 
  function utilitiesController(RxEService){
      var controller = ['$scope','$mdDialog',function ($scope,$mdDialog) {
-           $scope.client = {}
+          
+           $scope.client = {activity:[],documents:[]}
+           $scope.dirtyList = []
            $scope.clients = RxEService.getClients()
            $scope.entity_types = RxEService.getEntityTypes()
            $scope.unitedStates = RxEService.getUnitedStates()
@@ -28,10 +30,11 @@
                   client_id:$scope.client.client_id,
                   change_description: newActivity,
                   change_user: window.app.user.user_id,
-                  change_datetime: "3/12/1985"
+                  change_datetime: moment().format("YYYY-MM-DD HH:mm:ss"),
+                  isDirty:true
                 }
                 $scope.client.activity.push(actObj)
-                //add service
+                $scope.makeDirty('activity')
               }, function() {});
             };
            $scope.showClientAdd = function(ev) {
@@ -50,6 +53,16 @@
                 }
               }, function() {});
             };
+           $scope.makeDirty = function(e){
+             if($scope.dirtyList.indexOf(e) == -1){
+                $scope.dirtyList.push(e)
+             }
+             RxEService.showSave()
+           }
+           $scope.uploadFile = function($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event){
+              console.log($file);
+              $scope.makeDirty('documents')
+           }
     }]
 
     return {

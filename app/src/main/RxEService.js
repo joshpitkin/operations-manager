@@ -1,8 +1,8 @@
 (function(){
   'use strict';
-  angular.module('main').service('RxEService', ['$q','$http', RxEService]);
+  angular.module('main').service('RxEService', ['$q','$http','$mdToast', RxEService]);
 
-  function RxEService($q,$http){
+  function RxEService($q,$http,$mdToast){
     window.app = {
       engine:'http://localhost/rxe-api/operations-manager-engine.php',
       user:{user_id:'NWEAVER'},
@@ -125,7 +125,7 @@
               contact_position:'president',
               contact_email:'frank@gmail',
               contact_phone:'123-123-1234',
-              format_instructions:'',
+              format_instructions:'testing <b>TEsTING</b> testing',
               documents:[{
                   title:'NDA',
                   date:'3/12/85',
@@ -183,7 +183,22 @@
       },
       getEntityTypes: function(){
         return [{type:'A'},{type:'B'},{type:'C'},{type:'D'}]
-      }
+      },
+      showSave: function() {
+        var toast = $mdToast.simple()
+          .textContent('You have unsaved changes')
+          .action('Click to Save')
+          .highlightAction(true)
+          .highlightClass('md-accent')// Accent is used by default, this just demonstrates the usage.
+          .position('top right')
+          .hideDelay(200000);
+
+        $mdToast.show(toast).then(function(response) {
+          if ( response == 'ok' ) {
+            alert('You clicked the \'UNDO\' action.');
+          }
+        });
+    }
     };
   }
 

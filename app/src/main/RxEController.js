@@ -3,7 +3,7 @@
   angular
        .module('main',['angularTrix','ngFileUpload'])
        .controller('RxEController', ['$scope',
-          'RxEService', 'Upload', '$mdSidenav', '$mdBottomSheet', '$timeout', '$log','$mdToast',
+          'RxEService', 'Upload', '$mdSidenav', '$mdBottomSheet', '$timeout', '$log',
           RxEController
        ]);
 
@@ -25,21 +25,6 @@
       $mdSidenav('left').toggle();
     }
     self.clients = RxEService.getClients()
-    $scope.showActionToast = function() {
-    var toast = $mdToast.simple()
-      .textContent('You have unsaved changes')
-      .action('Click to Save')
-      .highlightAction(true)
-      .highlightClass('md-accent')// Accent is used by default, this just demonstrates the usage.
-      .position('top right')
-      .hideDelay(200000);
-
-    $mdToast.show(toast).then(function(response) {
-      if ( response == 'ok' ) {
-        alert('You clicked the \'UNDO\' action.');
-      }
-    });
-  };
     // self.makeContact  = makeContact
     // function makeContact(selectedUser) {
     //     $mdBottomSheet.show({
