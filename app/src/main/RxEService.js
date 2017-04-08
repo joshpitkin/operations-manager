@@ -1,8 +1,8 @@
 (function(){
   'use strict';
-  angular.module('main').service('RxEService', ['$q','$http','$mdToast', RxEService]);
+  angular.module('main').service('RxEService', ['$q','$http','$mdToast','Upload', RxEService]);
 
-  function RxEService($q,$http,$mdToast){
+  function RxEService($q,$http,$mdToast,Upload){
     window.app = {
       engine:'http://localhost/rxe-api/operations-manager-engine.php',
       user:{user_id:'NWEAVER'},
@@ -198,8 +198,33 @@
             alert('You clicked the \'UNDO\' action.');
           }
         });
+      },
+      uploadFile: function(file,invalidFile){
+
+        var deferred = $q.defer()
+          if(file){
+            Upload.upload({
+                url: window.app.engine + "?cmd=upload-file",
+                data: {file: file, 'targetPath': 'test'}
+            }).then(function (msg) {
+                if(msg.data.success){
+                   deferred.resolve(msg.data.data)
+                }else{
+                  deferred.reject(msg.data)
+                }
+                // console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+            }, function (msg) {
+                deferred.reject(msg.data)
+            }
+              // ,function (evt) {
+              //   var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+              //   console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+              // }
+            )
+          }
+          return deferred.promise
+      }
     }
-    };
   }
 
 })();

@@ -6,9 +6,10 @@
 
  function utilitiesController(RxEService){
      var controller = ['$scope','$mdDialog',function ($scope,$mdDialog) {
-          
+
            $scope.client = {activity:[],documents:[]}
            $scope.dirtyList = []
+           $scope.fileList = []
            $scope.clients = RxEService.getClients()
            $scope.entity_types = RxEService.getEntityTypes()
            $scope.unitedStates = RxEService.getUnitedStates()
@@ -60,9 +61,39 @@
              RxEService.showSave()
            }
            $scope.uploadFile = function($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event){
-              console.log($file);
-              $scope.makeDirty('documents')
-           }
+             var newFile = RxEService.uploadFile($file).then(function(msg){
+                var fileDesc = $mdDialog.prompt()
+                  .title('What File is This?')
+                  .placeholder('File Name')
+                  .ariaLabel('File Name')
+                  .targetEvent($event)
+                  .ok('Save File')
+                  .cancel("Cancel Upload");
+
+                $mdDialog.show(fileDesc).then(function(fileObj) {
+                  console.log(fileObj)
+                }, function() {});
+                $scope.client.documents.push(msg)
+             })
+             }
+            //  console.log(newFile)
+            //  if(newFile) {
+            //    var fileDesc = $mdDialog.prompt()
+            //      .title('What File is This?')
+            //      .placeholder('File Name')
+            //      .ariaLabel('File Name')
+            //      .targetEvent($event)
+            //      .ok('Save File')
+            //      .cancel("Cancel Upload");
+             //
+            //    $mdDialog.show(fileDesc).then(function(fileObj) {
+            //      console.log(fileObj)
+            //    }, function() {});
+             //
+             //
+            //  }
+          //  }
+
     }]
 
     return {
