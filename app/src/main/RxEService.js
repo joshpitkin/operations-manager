@@ -1,8 +1,8 @@
 (function(){
   'use strict';
-  angular.module('main').service('RxEService', ['$q','$http','$mdToast', RxEService]);
+  angular.module('main').service('RxEService', ['$q','$http','$mdToast','$mdDialog','$timeout','Upload', RxEService]);
 
-  function RxEService($q,$http,$mdToast){
+  function RxEService($q,$http,$mdToast,$mdDialog,$timeout,Upload){
     window.app = {
       engine:'http://localhost/rxe-api/operations-manager-engine.php',
       user:{user_id:'NWEAVER'},
@@ -62,7 +62,6 @@
     //   return treeify(root,obj)
     // };
 
-    // Promise-based API
     return {
       utilities:utilities,
       getClients: function(){
@@ -102,73 +101,62 @@
           utilities: (processor,client,employee)
           id: (processor_id,client_id,employee_id)
         */
-          return {
-              client_id:'RxETEST',
-              active:true,
-              entity_name:'test',
-              entity_type:'test',
-              entity_address:'123 road',
-              entity_city:'houston',
-              entity_state:'tx',
-              entity_zip:'77777',
-              entity_EIN:'123-4123098',
-              bank_name:'wells fargo',
-              bank_address:'123 road street',
-              bank_city:'sugar land',
-              bank_state:'tx',
-              bank_zip:'88888',
-              bank_account_holder:'mdsccripts',
-              bank_account_number:'123123132',
-              bank_routing_number_direct_deposit:'12312',
-              bank_routing_number_wire:'12312',
-              contact_name:'frank',
-              contact_position:'president',
-              contact_email:'frank@gmail',
-              contact_phone:'123-123-1234',
-              format_instructions:'testing <b>TEsTING</b> testing',
-              documents:[{
-                  title:'NDA',
-                  date:'3/12/85',
-                  location:'http://www.google.com'
-                },{
-                  title:'BAA',
-                  date:'3/12/85',
-                  location:'http://www.google.com'
-                },{
-                  title:'Service Aggreement',
-                  date:null,
-                  location:null
-                },{
-                  title:'W9',
-                  date:null,
-                  location:null
-                }],
-              rebate_history:[{
-                  name: 'Point 1',
-                  y: 24,
-                }, {
-                    name: 'Point 2',
-                    y: 15
-                }, {
-                    name: 'Point 3',
-                    y: 18
-                }],
-              activity:[{
-                    client_id:'RxETest',
-                    change_description: "teset change",
-                    change_user: "NWEAVER",
-                    change_datetime: "3/12/85"
-                  },{client_id:'RxETest',
-                    change_description: "teset change",
-                    change_user: "NWEAVER",
-                    change_datetime: "3/12/85"
-                  },{client_id:'RxETest',
-                    change_description: "teset change",
-                    change_user: "NWEAVER",
-                    change_datetime: "3/12/85"
-                  }
-                ]
-          }
+        var deferred = $q.defer()
+
+        $timeout( function(){
+            deferred.resolve({
+                client_id:'RxETEST',
+                active:true,
+                entity_name:'test',
+                entity_type:'test',
+                entity_address:'123 road',
+                entity_city:'houston',
+                entity_state:'tx',
+                entity_zip:'77777',
+                entity_EIN:'123-4123098',
+                bank_name:'wells fargo',
+                bank_address:'123 road street',
+                bank_city:'sugar land',
+                bank_state:'tx',
+                bank_zip:'88888',
+                bank_account_holder:'mdsccripts',
+                bank_account_number:'123123132',
+                bank_routing_number_direct_deposit:'12312',
+                bank_routing_number_wire:'12312',
+                contact_name:'frank',
+                contact_position:'president',
+                contact_email:'frank@gmail',
+                contact_phone:'123-123-1234',
+                format_instructions:'testing <b>TEsTING</b> testing',
+                documents:[],
+                rebate_history:[{
+                    name: 'Point 1',
+                    y: 24,
+                  }, {
+                      name: 'Point 2',
+                      y: 15
+                  }, {
+                      name: 'Point 3',
+                      y: 18
+                  }],
+                activity:[{
+                      client_id:'RxETest',
+                      change_description: "teset change",
+                      change_user: "NWEAVER",
+                      change_datetime: "3/12/85"
+                    },{client_id:'RxETest',
+                      change_description: "teset change",
+                      change_user: "NWEAVER",
+                      change_datetime: "3/12/85"
+                    },{client_id:'RxETest',
+                      change_description: "teset change",
+                      change_user: "NWEAVER",
+                      change_datetime: "3/12/85"
+                    }
+                  ]
+            })
+        }, 5000 );
+
           // $http({
           //      method : "GET",
           //      url : window.app.engine + "?cmd=get-client-info&client_id="+client_id
@@ -177,6 +165,7 @@
           //  }, function myError(response) {
           //     return {};
           //  });
+          return deferred.promise
       },
       getUnitedStates: function(){
         return getUnitedStates()
@@ -198,8 +187,79 @@
             alert('You clicked the \'UNDO\' action.');
           }
         });
+      },
+      uploadFile: function(file,invalidFile){
+        var deferred = $q.defer()
+          if(file){
+            Upload.upload({
+                url: window.app.engine + "?cmd=upload-file",
+                data: {file: file, 'targetPath': 'test'}
+            }).then(function (msg) {
+                if(msg.data.success){
+                   deferred.resolve(msg.data.data)
+                }else{
+                  deferred.reject(msg.data)
+                }
+                // console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+            }, function (msg) {
+                deferred.reject(msg.data)
+            }
+              // ,function (evt) {
+              //   var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+              //   console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+              // }
+            )
+          }
+          return deferred.promise
+      },
+      genericPost: function(cmd,data){
+        var deferred = $q.defer()
+        data = "data=" + JSON.stringify(data)
+
+        $http({
+             method : "POST",
+             url : window.app.engine + "?cmd=" + cmd,
+             data : data,
+             headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+         }).then(function mySucces(msg) {
+            deferred.resolve(msg.data.data)
+         }, function myError(msg) {
+            deferred.resolve(msg.data)
+         });
+         return deferred.promise
+      },
+      genericAlert: function(ev,message,title) {
+         $mdDialog.show(
+           $mdDialog.alert()
+             .parent(angular.element(document.body))
+             .clickOutsideToClose(true)
+             .title(title)
+             .textContent(message)
+             .ariaLabel(title)
+             .ok('Okay')
+             .targetEvent(ev)
+         );
+       },
+     genericConfim: function(ev,message,title) {
+        var deferred = $q.defer()
+        // Appending dialog to document.body to cover sidenav in docs app
+        var confirm = $mdDialog.confirm()
+          .title(title)
+          .textContent(message)
+          .ariaLabel(title)
+          .targetEvent(ev)
+          .ok('OK')
+          .cancel('Cancel');
+
+        $mdDialog.show(confirm).then(function() {
+          deferred.resolve(true)
+        }, function() {
+          // deferred.resolve(false)
+        });
+        return deferred.promise
+      }
+
     }
-    };
   }
 
 })();

@@ -10,11 +10,11 @@
           Add
         </md-button>
         <span flex></span>
-        <md-switch class="md-headline" ng-change="makeDirty('active')" name="active" ng-model="client.active">{{(client.active)?'Active':'Inactive'}}</md-switch>
+        <md-switch ng-if='clientIsLoaded' class="md-headline" ng-change="makeDirty('active')" name="active" ng-model="client.active">{{(client.active)?'Active':'Inactive'}}</md-switch>
       </div>
     </md-toolbar>
   <div ng-cloak="" class="tabsdemoDynamicHeight" ng-app="MyApp">
-      <md-tabs md-dynamic-height="" md-border-bottom="">
+      <md-tabs ng-if='clientIsLoaded' md-dynamic-height="" md-border-bottom="">
         <md-tab ng-if="(config.tabs.indexOf('Contact') >= 0)" label="Contact">
           <md-content class="md-padding">
             <form name="manageForm">
@@ -138,7 +138,7 @@
                 </md-button>
               </h1>
               <md-list flex="">
-                <md-list-item class="md-3-line" ng-repeat="item in client.activity" ng-click="null">
+                <md-list-item class="md-3-line" ng-repeat="item in client.activity | orderBy:'-'" ng-click="null">
                  <div class="md-list-item-text" layout="column">
                    <h4><i>{{ item.change_user }} on {{item.change_datetime}}<i></h4>
                    <b>{{ item.change_description }}</b>
@@ -269,6 +269,7 @@
                     accept="image/*,application/pdf"
                     ngf-pattern="'image/*,application/pdf'">Upload File</br><ng-md-icon class="md-secondary" icon="cloud_upload"></ng-md-icon>
                   </div>
+                  <!-- ngf-change="uploadFile($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event)" -->
                   <!-- https://github.com/danialfarid/ng-file-upload/blob/master/README.md#full-reference -->
                 </div>
                 <ul>
@@ -277,15 +278,14 @@
               <md-list>
                 <md-list-item ng-repeat="doc in client.documents"  class="noright">
                   <!-- <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" /> -->
-                  <p>{{ doc.title }}</p>
+                  <p>{{doc.name}}</p>
                   <div>
-                    <md-checkbox class="md-secondary"></md-checkbox>
-                  </div>
-                  <div>
-                    <ng-md-icon class="md-secondary" icon="cloud_download"></ng-md-icon>
-                  </div>
-                  <div>
-                    <ng-md-icon class="md-secondary" icon="cloud_upload"></ng-md-icon>
+                    <md-button class="md-secondary" ng-click="removeFile(doc,$event)" class="md-raised" aria-label="Remove File">
+                      <ng-md-icon  icon="delete_forever"></ng-md-icon>
+                    </md-button>
+                    <md-button class="md-secondary" ng-click="download(doc,$event)" class="md-raised" aria-label="Remove File">
+                      <ng-md-icon  icon="cloud_download"></ng-md-icon>
+                    </md-button>
                   </div>
                 </md-list-item>
               </md-list>

@@ -26,14 +26,13 @@
   </head>
 
   <body ng-app="RxEApp" layout="column" ng-controller="RxEController as ctrl" ng-cloak>
-
     <md-toolbar layout="row">
       <md-button class="menu" hide-gt-sm ng-click="ctrl.toggleList()" aria-label="Show User List">
         <md-icon md-svg-icon="menu" ></md-icon>
       </md-button>
       <h1>RxEBATE Operations Manager</h1>
     </md-toolbar>
-
+    <md-progress-linear md-mode="indeterminate"></md-progress-linear>
     <div flex layout="row">
 
         <md-sidenav  ng-click="ctrl.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
