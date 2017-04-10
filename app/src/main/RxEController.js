@@ -24,7 +24,9 @@
     self.toggleList   = function(){
       $mdSidenav('left').toggle();
     }
+    $scope.loading = false
     self.clients = RxEService.getClients()
+
     // self.makeContact  = makeContact
     // function makeContact(selectedUser) {
     //     $mdBottomSheet.show({
