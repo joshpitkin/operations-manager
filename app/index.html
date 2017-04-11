@@ -26,13 +26,13 @@
   </head>
 
   <body ng-app="RxEApp" layout="column" ng-controller="RxEController as ctrl" ng-cloak>
+    <md-progress-linear ng-if="$root.loading" md-mode="indeterminate"></md-progress-linear>
     <md-toolbar layout="row">
       <md-button class="menu" hide-gt-sm ng-click="ctrl.toggleList()" aria-label="Show User List">
         <md-icon md-svg-icon="menu" ></md-icon>
       </md-button>
       <h1>RxEBATE Operations Manager</h1>
     </md-toolbar>
-    <md-progress-linear md-mode="indeterminate"></md-progress-linear>
     <div flex layout="row">
 
         <md-sidenav  ng-click="ctrl.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
@@ -54,7 +54,7 @@
           <!-- <md-button class="md-raised" ng-click="showActionToast()">
             Show Toast
           </md-button> -->
-          <rx-utility ng-if='ctrl.selectedUtility != null' config="ctrl.selectedUtility"></rx-utility>
+          <rx-utility ng-if='ctrl.selectedUtility != null' utility="ctrl.selectedUtility"></rx-utility>
           <!-- <clients-view ng-if="ctrl.selected.name == 'Manage Clients'"></clients-view>
           <claims-view  ng-if="ctrl.selected.name == 'Process Claims'"></claims-view>
           <employees-view  ng-if="ctrl.selected.name == 'Manage Employees'"></employees-view>

@@ -1,8 +1,8 @@
 (function(){
   'use strict';
-  angular.module('main').service('RxEService', ['$q','$http','$mdToast','$mdDialog','$timeout','Upload', RxEService]);
+  angular.module('main').service('RxEService', ['$q','$rootScope','$http','$mdToast','$mdDialog','$timeout','Upload', RxEService]);
 
-  function RxEService($q,$http,$mdToast,$mdDialog,$timeout,Upload){
+  function RxEService($q,$rootScope,$http,$mdToast,$mdDialog,$timeout,Upload){
     window.app = {
       engine:'http://localhost/rxe-api/operations-manager-engine.php',
       user:{user_id:'NWEAVER'},
@@ -15,18 +15,24 @@
     var utilities = [{
         name:'Processors',
         icon:'business',
+        identifier:'Processor ID',
         description:'manage Processor',
+        call:'get-processors',
         tabs:['Contact','History','Financial','Documents','Scripting']
       },
       {
         name: 'Clients',
         icon: 'contacts',
+        identifier:'Client ID',
+        call:'get-clients',
         description: 'manage clients',
         tabs:['Contact','History','Financial','Documents','Scripting']
       },
       {
         name: 'Employees',
         icon: 'people',
+        identifier:'Employee ID',
+        call:'get-employees',
         description: 'Manage Employees',
         tabs:['Contact','Financial','Documents']
       },
@@ -64,98 +70,101 @@
 
     return {
       utilities:utilities,
-      getClients: function(){
-        if(window.app.clients.length == 0){
+      getClients: function(utility){
+        console.log(utility.call)
+        var deferred = $q.defer()
           $http({
                method : "GET",
-               url : window.app.engine + "?cmd=get-clients"
+               url : window.app.engine + "?cmd=" + utility.call
            }).then(function mySucces(response) {
-                window.app.clients = response.data.data //(response.data.success)?  buildConfig(response.data.data):{}
-                return window.app.clients
+                deferred.resolve( response.data.data)
            }, function myError(response) {
-              window.app.clients = []
-              return [];
+                deferred.reject( response)
            });
-        }else{
-          return window.app.clients
-        }
+        return deferred.promise
       },
-      getConfig:function(){
-        if(window.app.config == {}){
-          $http({
-               method : "GET",
-               url : this.engine + "?cmd=get-config"
-           }).then(function mySucces(response) {
-                window.app.config = response //(response.data.success)?  buildConfig(response.data.data):{}
-               return window.app.config
-           }, function myError(response) {
-               window.app.config = {}
-               return {};
-           })
-        }else{
-          return window.app.config
-        }
-      },
+      // getConfig:function(){
+      //   if(window.app.config == {}){
+      //     $http({
+      //          method : "GET",
+      //          url : this.engine + "?cmd=get-config"
+      //      }).then(function mySucces(response) {
+      //           window.app.config = response //(response.data.success)?  buildConfig(response.data.data):{}
+      //          return window.app.config
+      //      }, function myError(response) {
+      //          window.app.config = {}
+      //          return {};
+      //      })
+      //   }else{
+      //     return window.app.config
+      //   }
+      // },
       getUtilityInfo: function(id,utility){
         /*
           utilities: (processor,client,employee)
           id: (processor_id,client_id,employee_id)
         */
+        console.log(utility)
         var deferred = $q.defer()
-
         $timeout( function(){
             deferred.resolve({
-                client_id:'RxETEST',
-                active:true,
-                entity_name:'test',
-                entity_type:'test',
-                entity_address:'123 road',
-                entity_city:'houston',
-                entity_state:'tx',
-                entity_zip:'77777',
-                entity_EIN:'123-4123098',
-                bank_name:'wells fargo',
-                bank_address:'123 road street',
-                bank_city:'sugar land',
-                bank_state:'tx',
-                bank_zip:'88888',
-                bank_account_holder:'mdsccripts',
-                bank_account_number:'123123132',
-                bank_routing_number_direct_deposit:'12312',
-                bank_routing_number_wire:'12312',
-                contact_name:'frank',
-                contact_position:'president',
-                contact_email:'frank@gmail',
-                contact_phone:'123-123-1234',
-                format_instructions:'testing <b>TEsTING</b> testing',
+                client_info:{
+                  y
+                },
+                parameters:{
+                  // entity_name:'test',
+                  // entity_type:'test',
+                  // entity_address:'123 road',
+                  // entity_city:'houston',
+                  // entity_state:'tx',
+                  // entity_zip:'77777',
+                  // entity_EIN:'123-4123098',
+                  // bank_name:'wells fargo',
+                  // bank_address:'123 road street',
+                  // bank_city:'sugar land',
+                  // bank_state:'tx',
+                  // bank_zip:'88888',
+                  // bank_account_holder:'mdsccripts',
+                  // bank_account_number:'123123132',
+                  // bank_routing_number_direct_deposit:'12312',
+                  // bank_routing_number_wire:'12312',
+                  // contact_name:'frank',
+                  // contact_position:'president',
+                  // contact_email:'frank@gmail',
+                  // contact_phone:'123-123-1234',
+                  // format_instructions:'testing <b>TEsTING</b> testing',
+                },
                 documents:[],
-                rebate_history:[{
-                    name: 'Point 1',
-                    y: 24,
-                  }, {
-                      name: 'Point 2',
-                      y: 15
-                  }, {
-                      name: 'Point 3',
-                      y: 18
-                  }],
-                activity:[{
-                      client_id:'RxETest',
-                      change_description: "teset change",
-                      change_user: "NWEAVER",
-                      change_datetime: "3/12/85"
-                    },{client_id:'RxETest',
-                      change_description: "teset change",
-                      change_user: "NWEAVER",
-                      change_datetime: "3/12/85"
-                    },{client_id:'RxETest',
-                      change_description: "teset change",
-                      change_user: "NWEAVER",
-                      change_datetime: "3/12/85"
-                    }
+                rebate_history:[
+                  // {
+                  //   name: 'Point 1',
+                  //   y: 24,
+                  // }, {
+                  //     name: 'Point 2',
+                  //     y: 15
+                  // }, {
+                  //     name: 'Point 3',
+                  //     y: 18
+                  // }
+                ],
+                activity:[
+                  // {
+                  //     client_id:1005,
+                  //     change_description: "teset change",
+                  //     change_user: "NWEAVER",
+                  //     change_datetime: "3/12/85"
+                  //   },{client_id:1005,
+                  //     change_description: "teset change",
+                  //     change_user: "NWEAVER",
+                  //     change_datetime: "3/12/85"
+                  //   },{client_id:1005,
+                  //     change_description: "teset change",
+                  //     change_user: "NWEAVER",
+                  //     change_datetime: "3/12/85"
+                  //   }
                   ]
             })
-        }, 5000 );
+        }, 1000 );
 
           // $http({
           //      method : "GET",
@@ -174,6 +183,8 @@
         return [{type:'A'},{type:'B'},{type:'C'},{type:'D'}]
       },
       showSave: function() {
+        var deferred = $q.defer()
+        $rootScope.showingSave = true
         var toast = $mdToast.simple()
           .textContent('You have unsaved changes')
           .action('Click to Save')
@@ -183,10 +194,27 @@
           .hideDelay(200000);
 
         $mdToast.show(toast).then(function(response) {
+          $rootScope.showingSave = false
           if ( response == 'ok' ) {
-            alert('You clicked the \'UNDO\' action.');
+            deferred.resolve()
           }
         });
+        return deferred.promise
+      },
+      saveChanges:function(dirtyList,utility){
+        var deferred = $q.defer()
+        $http({
+             method : "POST",
+             url : window.app.engine + "?cmd=" + cmd,
+             data : data,
+             headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+         }).then(function mySucces(msg) {
+            deferred.resolve(msg.data.data)
+         }, function myError(msg) {
+            deferred.resolve(msg.data)
+         });
+
+        return deferred.promise
       },
       uploadFile: function(file,invalidFile){
         var deferred = $q.defer()
@@ -240,7 +268,7 @@
              .targetEvent(ev)
          );
        },
-     genericConfim: function(ev,message,title) {
+      genericConfim: function(ev,message,title) {
         var deferred = $q.defer()
         // Appending dialog to document.body to cover sidenav in docs app
         var confirm = $mdDialog.confirm()

@@ -2,7 +2,7 @@
 
   angular
        .module('main',['angularTrix','ngFileUpload'])
-       .controller('RxEController', ['$scope',
+       .controller('RxEController', ['$scope','$rootScope',
           'RxEService', 'Upload', '$mdSidenav', '$mdBottomSheet', '$timeout', '$log',
           RxEController
        ]);
@@ -13,19 +13,24 @@
    * @param avatarsService
    * @constructor
    */
-  function RxEController( $scope,RxEService, Upload, $mdSidenav, $mdBottomSheet, $timeout, $log ,$mdToast) {
+  function RxEController( $scope,$rootScope,RxEService, Upload, $mdSidenav, $mdBottomSheet, $timeout, $log ,$mdToast) {
     var self = this
-
+    $rootScope.showUtility = false
+    $rootScope.loading = false
     self.utilities     = RxEService.utilities
     self.selectedUtility     = null
     self.toggleUtility   = function( ut ) {
+      $rootScope.utility = ut
+      $rootScope.$broadcast('changeUtility');
+      $rootScope.showUtility = (ut.name == 'Claims')
+
       self.selectedUtility = angular.isNumber(ut) ? self.utilities[rt] : ut;
     }
     self.toggleList   = function(){
       $mdSidenav('left').toggle();
     }
-    $scope.loading = false
-    self.clients = RxEService.getClients()
+
+    // self.clients = RxEService.getClients()
 
     // self.makeContact  = makeContact
     // function makeContact(selectedUser) {
