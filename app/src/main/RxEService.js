@@ -109,59 +109,62 @@
         $timeout( function(){
             deferred.resolve({
                 client_info:{
-                  y
+                  client_id:1005,
+                  client_name:'RxETEST',
+                  client_status:'Active',
+                  client_insert_datetime:''
                 },
                 parameters:{
-                  // entity_name:'test',
-                  // entity_type:'test',
-                  // entity_address:'123 road',
-                  // entity_city:'houston',
-                  // entity_state:'tx',
-                  // entity_zip:'77777',
-                  // entity_EIN:'123-4123098',
-                  // bank_name:'wells fargo',
-                  // bank_address:'123 road street',
-                  // bank_city:'sugar land',
-                  // bank_state:'tx',
-                  // bank_zip:'88888',
-                  // bank_account_holder:'mdsccripts',
-                  // bank_account_number:'123123132',
-                  // bank_routing_number_direct_deposit:'12312',
-                  // bank_routing_number_wire:'12312',
-                  // contact_name:'frank',
-                  // contact_position:'president',
-                  // contact_email:'frank@gmail',
-                  // contact_phone:'123-123-1234',
-                  // format_instructions:'testing <b>TEsTING</b> testing',
+                  entity_name:'test',
+                  entity_type:'test',
+                  entity_address:'123 road',
+                  entity_city:'houston',
+                  entity_state:'tx',
+                  entity_zip:'77777',
+                  entity_EIN:'123-4123098',
+                  bank_name:'wells fargo',
+                  bank_address:'123 road street',
+                  bank_city:'sugar land',
+                  bank_state:'tx',
+                  bank_zip:'88888',
+                  bank_account_holder:'mdsccripts',
+                  bank_account_number:'123123132',
+                  bank_routing_number_direct_deposit:'12312',
+                  bank_routing_number_wire:'12312',
+                  contact_name:'frank',
+                  contact_position:'president',
+                  contact_email:'frank@gmail',
+                  contact_phone:'123-123-1234',
+                  format_instructions:'testing <b>TEsTING</b> testing',
                 },
                 documents:[],
                 rebate_history:[
-                  // {
-                  //   name: 'Point 1',
-                  //   y: 24,
-                  // }, {
-                  //     name: 'Point 2',
-                  //     y: 15
-                  // }, {
-                  //     name: 'Point 3',
-                  //     y: 18
-                  // }
+                  {
+                    name: 'Point 1',
+                    y: 24,
+                  }, {
+                      name: 'Point 2',
+                      y: 15
+                  }, {
+                      name: 'Point 3',
+                      y: 18
+                  }
                 ],
                 activity:[
-                  // {
-                  //     client_id:1005,
-                  //     change_description: "teset change",
-                  //     change_user: "NWEAVER",
-                  //     change_datetime: "3/12/85"
-                  //   },{client_id:1005,
-                  //     change_description: "teset change",
-                  //     change_user: "NWEAVER",
-                  //     change_datetime: "3/12/85"
-                  //   },{client_id:1005,
-                  //     change_description: "teset change",
-                  //     change_user: "NWEAVER",
-                  //     change_datetime: "3/12/85"
-                  //   }
+                  {
+                      client_id:1005,
+                      change_description: "teset change",
+                      change_user: "NWEAVER",
+                      change_datetime: "3/12/85"
+                    },{client_id:1005,
+                      change_description: "teset change",
+                      change_user: "NWEAVER",
+                      change_datetime: "3/12/85"
+                    },{client_id:1005,
+                      change_description: "teset change",
+                      change_user: "NWEAVER",
+                      change_datetime: "3/12/85"
+                    }
                   ]
             })
         }, 1000 );
