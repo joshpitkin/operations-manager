@@ -179,6 +179,38 @@
           //  });
           return deferred.promise
       },
+      prepareCleanObject: function(o){
+        var obj = {}
+          for(var prop in o){
+              obj[prop] = {}
+              obj[prop]["value"] = o[prop]
+              obj[prop]["original-value"] = o[prop]
+            }
+        return obj
+      },
+      prepareDirtyObject: function(o){
+        var obj  = {
+          client_info:{},
+          parameters:{}
+        }
+        var rtn = []
+        for(var item in obj){
+          for(var prop in o[item]){
+            var newVal = o[item][prop]["value"]
+            var val = o[item][prop]["original-value"]
+            var cmd = (typeof val == 'undefined')?"insert":"update"
+            if(typeof newVal != 'undefined' && val != newVal){
+              rtn.push({
+                item_type:item,
+                item_name:prop,
+                item_val:newVal,
+                command:cmd
+              })
+            }
+          }
+        }
+        return rtn
+      },
       getUnitedStates: function(){
         return getUnitedStates()
       },
@@ -289,7 +321,6 @@
         });
         return deferred.promise
       }
-
     }
   }
 

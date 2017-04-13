@@ -58,7 +58,7 @@
               }, function() {});
             };
            $scope.setReady = function(){
-             $scope.client_uid = $scope.utility.name[0] + $scope.client.client_info.client_id
+             $scope.client_uid = $scope.utility.name[0] + $scope.client.client_info.client_id.value
              $scope.clientIsLoaded = true
              $rootScope.showUtility = true
              $rootScope.loading = false
@@ -81,9 +81,8 @@
                     client_name:newClient.toUpperCase()
                   }
                   RxEService.genericPost("insert-client",data).then(function(msg){
-
                     $scope.client = angular.copy($scope.defaultClient);
-                    $scope.client.client_info = msg[0]
+                    $scope.client.client_info = RxEService.prepareCleanObject(msg[0])
                     $scope.clients.push(msg[0])
                     $scope.setReady()
                   })
@@ -92,6 +91,7 @@
               }, function() {});
             };
            $scope.makeDirty = function(obj_type,obj_name){
+            //  console.log("blaaa")
              if(typeof $scope.client[obj_type][obj_name]['pristine'] == 'undefined'){
                $scope.client[obj_type][obj_name]['pristine'] = true
              }
@@ -101,11 +101,12 @@
              }
              if($rootScope.showingSave) return
              RxEService.showSave().then(function(){
-               var d = $scope.client.parameters.map(function(r){
-                 //reduce to single object.
-               })
-               RxEService.saveChanges($scope.dirtyList,$scope.utility).then(function(msg){
-               })
+
+               var dirtyObj = RxEService.prepareDirtyObject($scope.client)
+               console.log(dirtyObj)
+              //  RxEService.saveChanges(dirtyObj,$scope.utility).then(function(msg){
+              //    //todo: convert dirty object to clean object HERE
+              //  })
              })
            }
            $scope.uploadFile = function($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event){

@@ -10,13 +10,13 @@
           Add
         </md-button>
         <span flex></span>
-        <md-switch ng-if='clientIsLoaded' class="md-headline" ng-change="makeDirty('client_info','client_status')" name="active" ng-model="client.client_info.client_status">{{(client.client_info.client_status == 'Active')?'Active':'Inactive'}}</md-switch>
+        <md-switch ng-if='clientIsLoaded' class="md-headline" ng-change="makeDirty('client_info','client_status')" aria-label="Client Status" name="client_status" ng-model="client.client_info.client_status.value">{{(client.client_info.client_status.value)?'Active':'Inactive'}}</md-switch>
       </div>
     </md-toolbar>
   <div ng-if=($root.showUtility) ng-cloak="" class="tabsdemoDynamicHeight" ng-app="MyApp">
       <h3 layout="row" layout-align="center center">
-        <div>Name: {{client.client_info.client_name}} </div>
-        <div> ID: {{client_uid}}</div>
+        <span>{{client.client_info.client_name.value}} </span> &nbsp - &nbsp
+        <span>ID: {{client_uid}}</span>
       </h3>
       <md-tabs md-dynamic-height="" md-border-bottom="">
         <md-tab ng-if="(utility.tabs.indexOf('Contact') >= 0)" label="Contact">
