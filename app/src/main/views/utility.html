@@ -10,13 +10,14 @@
           Add
         </md-button>
         <span flex></span>
-        <md-switch ng-if='clientIsLoaded' class="md-headline" ng-change="makeDirty('client_info','client_status')" aria-label="Client Status" name="client_status" ng-model="client.client_info.client_status.value">{{(client.client_info.client_status.value)?'Active':'Inactive'}}</md-switch>
+        <md-switch ng-if='clientIsLoaded' ng-change="changeField('client_status')" aria-label="Client Status" ng-model="dummy.active" aria-label="Switch 1"> {{ client.client_info.client_status.value }} </md-switch>
+        <!-- <md-switch ng-if='clientIsLoaded' ng-change="changeField('client_status')" aria-label="Client Status" name="client_status" ng-model="activeBoolean"></md-switch> -->
       </div>
     </md-toolbar>
   <div ng-if=($root.showUtility) ng-cloak="" class="tabsdemoDynamicHeight" ng-app="MyApp">
       <h3 layout="row" layout-align="center center">
         <span>{{client.client_info.client_name.value}} </span> &nbsp - &nbsp
-        <span>ID: {{client_uid}}</span>
+        <span>ID: {{dummy.client_uid}}</span>
       </h3>
       <md-tabs md-dynamic-height="" md-border-bottom="">
         <md-tab ng-if="(utility.tabs.indexOf('Contact') >= 0)" label="Contact">
@@ -26,7 +27,7 @@
                 <div layout="row">
                   <md-input-container flex="60">
                     <label>Entity Name</label>
-                    <input required name="entity_name" ng-change="makeDirty('parameters','entity_name')" ng-model="client.parameters.entity_name.value">
+                    <input required name="entity_name" ng-change="changeField()" ng-model="client.parameters.entity_name.value">
                     <div ng-messages="manageForm.entity_name.$error">
                       <div ng-message="required">Please Provide Entity Name</div>
                     </div>
@@ -34,14 +35,14 @@
 
                   <md-input-container flex="40">
                     <label>Entity Type</label>
-                    <md-select name="entity_type" ng-change="makeDirty('parameters','entity_type')" ng-model="client.parameters.entity_type.value">
+                    <md-select name="entity_type" ng-change="changeField()" ng-model="client.parameters.entity_type.value">
                       <md-option ng-repeat='e in entity_types' value="{{e.type}}">{{e.type}}</md-option>
                     </md-select>
                   </md-input-container>
                 </div>
                 <md-input-container class="md-block">
                   <label>Physical Address</label>
-                  <input required name="entity_address" ng-change="makeDirty('parameters','entity_address')" ng-model="client.parameters.entity_address.value">
+                  <input required name="entity_address" ng-change="changeField()" ng-model="client.parameters.entity_address.value">
                   <div ng-messages="manageForm.entity_address.$error">
                     <div ng-message="required">Please Provide Entity Address</div>
                   </div>
@@ -50,7 +51,7 @@
                 <div layout="row">
                   <md-input-container flex="50">
                     <label>City</label>
-                    <input required name="entity_city" ng-change="makeDirty('parameters','entity_city')" ng-model="client.parameters.entity_city.value">
+                    <input required name="entity_city" ng-change="changeField()" ng-model="client.parameters.entity_city.value">
                     <div ng-messages="manageForm.entity_city.$error">
                       <div ng-message="required">Please Provide Entity City</div>
                     </div>
@@ -58,7 +59,7 @@
 
                   <md-input-container flex="20">
                     <label>State</label>
-                    <md-select name="entity_state" ng-change="makeDirty('parameters','entity_state')" ng-model="client.parameters.entity_state.value" required>
+                    <md-select name="entity_state" ng-change="changeField()" ng-model="client.parameters.entity_state.value" required>
                       <md-option ng-repeat='st in unitedStates' value="{{st.abbreviation}}">{{st.abbreviation}}</md-option>
                     </md-select>
                     <div ng-messages="manageForm.entity_state.$error">
@@ -67,7 +68,7 @@
                   </md-input-container>
                   <md-input-container flex="30">
                     <label>Zip</label>
-                    <input required name="entity_zip" ng-change="makeDirty('parameters','entity_zip')" ng-model="client.parameters.entity_zip.value">
+                    <input required name="entity_zip" ng-change="changeField()" ng-model="client.parameters.entity_zip.value">
                     <div ng-messages="manageForm.entity_zip.$error">
                       <div ng-message="required">Please Provide Entity Zip</div>
                     </div>
@@ -80,14 +81,14 @@
                 <div layout="row">
                   <md-input-container flex="60">
                     <label>Contact Name</label>
-                    <input required name="contact_name" ng-change="makeDirty('parameters','contact_name')" ng-model="client.parameters.contact_name.value">
+                    <input required name="contact_name" ng-change="changeField()" ng-model="client.parameters.contact_name.value">
                     <div ng-messages="manageForm.contact_name.$error">
                       <div ng-message="required">Please Provide Client Name</div>
                     </div>
                   </md-input-container>
                   <md-input-container flex="40">
                     <label>Position</label>
-                    <input name="contact_position" ng-change="makeDirty('parameters','contact_position')" ng-model="client.parameters.contact_position.value">
+                    <input name="contact_position" ng-change="changeField()" ng-model="client.parameters.contact_position.value">
                     <!-- <div ng-messages="manageForm.entity.$error">
                       <div ng-message="required">This is required.</div>
                     </div> -->
@@ -97,7 +98,7 @@
                 <div layout="row">
                   <md-input-container flex="50">
                     <label>Contact Email</label>
-                    <input required type="email" name="contact_email" ng-change="makeDirty('parameters','contact_email')" ng-model="client.parameters.contact_email.value"
+                    <input required type="email" name="contact_email" ng-change="changeField()" ng-model="client.parameters.contact_email.value"
                            minlength="3" maxlength="100" ng-pattern="/^.+@.+\..+$/" />
                     <div ng-messages="manageForm.contact_email.$error" role="alert">
                       <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
@@ -107,7 +108,7 @@
                   </md-input-container>
                   <md-input-container flex>
                     <label>Contact Phone</label>
-                    <input required name="contact_phone" ng-change="makeDirty('parameters','contact_phone')" ng-model="client.parameters.contact_phone.value"/>
+                    <input required name="contact_phone" ng-change="changeField()" ng-model="client.parameters.contact_phone.value"/>
                     <div ng-messages="manageForm.contact_phone.$error" role="alert">
                       <div ng-message='required'>
                         Plese Provide a Contact Phone Number
@@ -117,7 +118,7 @@
                 </div>
                 <md-input-container flex="40">
                   <label>FTP Password</label>
-                  <input name="FTP_password" ng-change="makeDirty('parameters','FTP_password')" ng-model="client.parameters.FTP_password.value">
+                  <input name="FTP_password" ng-change="changeField()" ng-model="client.parameters.FTP_password.value">
                   <!-- <div ng-messages="manageForm.FTP_password.$error">
                     <div ng-message="required">This is required.</div>
                   </div> -->
@@ -132,14 +133,14 @@
               <h1 class="md-headline">Tax</h1>
               <md-input-container ng-if="(utility.name != 'Employees')" flex="30">
                 <label>Federal EIN</label>
-                <input required name="entity_EIN" ng-change="makeDirty('parameters','entity_EIN')" ng-model="client.parameters.entity_EIN.value">
+                <input required name="entity_EIN" ng-change="changeField()" ng-model="client.parameters.entity_EIN.value">
                 <div ng-messages="manageForm.entity_EIN.$error">
                   <div ng-message="required">Please Provide EIN</div>
                 </div>
               </md-input-container>
               <md-input-container  ng-if="(utility.name == 'Employees')" flex="30">
                 <label>SSN</label>
-                <input required name="contact_SSN" ng-change="makeDirty('parameters','contact_SSN')" ng-model="client.parameters.contact_SSN.value">
+                <input required name="contact_SSN" ng-change="changeField()" ng-model="client.parameters.contact_SSN.value">
                 <div ng-messages="manageForm.contact_SSN.$error">
                   <div ng-message="required">Please Provide the SSN</div>
                 </div>
@@ -150,7 +151,7 @@
               <div layout="row">
                 <md-input-container flex="60">
                   <label>Bank Name</label>
-                  <input required name="bank_name" ng-change="makeDirty('parameters','bank_name')" ng-model="client.parameters.bank_name.value">
+                  <input required name="bank_name" ng-change="changeField()" ng-model="client.parameters.bank_name.value">
                   <div ng-messages="manageForm.bank_name.$error">
                     <div ng-message="required">This is required.</div>
                   </div>
@@ -158,7 +159,7 @@
               </div>
               <md-input-container class="md-block">
                 <label>Physical Address</label>
-                <input required name="bank_address" ng-change="makeDirty('parameters','bank_address')" ng-model="client.parameters.bank_address.value" />
+                <input required name="bank_address" ng-change="changeField()" ng-model="client.parameters.bank_address.value" />
                 <div ng-messages="manageForm.bank_address.$error" role="alert">
                   <div ng-message='required'>
                     Please provide the bank address
@@ -169,7 +170,7 @@
               <div layout="row">
                 <md-input-container flex="50">
                   <label>City</label>
-                  <input required name="bank_city" ng-change="makeDirty('parameters','bank_city')" ng-model="client.parameters.bank_city.value">
+                  <input required name="bank_city" ng-change="changeField()" ng-model="client.parameters.bank_city.value">
                   <div ng-messages="manageForm.bank_city.$error">
                     <div ng-message="required">This is required.</div>
                   </div>
@@ -177,13 +178,13 @@
 
                 <md-input-container flex="20">
                   <label>State</label>
-                  <md-select name="bank_state" ng-change="makeDirty('parameters','bank_state')" ng-model="client.parameters.bank_state.value" required>
+                  <md-select name="bank_state" ng-change="changeField()" ng-model="client.parameters.bank_state.value" required>
                     <md-option ng-repeat='st in unitedStates' value="{{st.abbreviation}}">{{st.abbreviation}}</md-option>
                   </md-select>
                 </md-input-container>
                 <md-input-container flex="30">
                   <label>Zip</label>
-                  <input required name="bank_zip" ng-change="makeDirty('parameters','bank_zip')" ng-model="client.parameters.bank_zip.value">
+                  <input required name="bank_zip" ng-change="changeField()" ng-model="client.parameters.bank_zip.value">
                   <div ng-messages="manageForm.bank_zip.$error">
                     <div ng-message="required">This is required.</div>
                   </div>
@@ -195,14 +196,14 @@
               <div layout="row">
                 <md-input-container flex="60">
                   <label>Account Holder Name</label>
-                  <input required name="bank_account_holder" ng-change="makeDirty('parameters','bank_account_holder')" ng-model="client.parameters.bank_account_holder.value">
+                  <input required name="bank_account_holder" ng-change="changeField()" ng-model="client.parameters.bank_account_holder.value">
                   <div ng-messages="manageForm.bank_account_holder.$error">
                     <div ng-message="required">This is required.</div>
                   </div>
                 </md-input-container>
                 <md-input-container>
                   <label>Account Number</label>
-                  <input required name='bank_account_number' ng-change="makeDirty('parameters','bank_account_number')" ng-model="client.parameters.bank_account_number.value"/>
+                  <input required name='bank_account_number' ng-change="changeField()" ng-model="client.parameters.bank_account_number.value"/>
                   <div ng-messages="manageForm.bank_account_number.$error" role="alert">
                     <div ng-message='required'>
                       Please Provide Account Number
@@ -213,14 +214,14 @@
               <div layout="row">
                 <md-input-container flex="50">
                   <label>Routing Number (Direct Deposit)</label>
-                  <input required name="bank_routing_number_direct_deposit" ng-change="makeDirty('parameters','bank_routing_number_direct_deposit')" ng-model="client.parameters.bank_routing_number_direct_deposit.value">
+                  <input required name="bank_routing_number_direct_deposit" ng-change="changeField()" ng-model="client.parameters.bank_routing_number_direct_deposit.value">
                   <div ng-messages="manageForm.bank_routing_number_direct_deposit.$error">
                     <div ng-message="required">This is required.</div>
                   </div>
                 </md-input-container>
                 <md-input-container flex="50">
                   <label>Routing Number (Wire Transfer)</label>
-                  <input required name="bank_routing_number_wire" ng-change="makeDirty('parameters','bank_routing_number_wire')" ng-model="client.parameters.bank_routing_number_wire.value">
+                  <input required name="bank_routing_number_wire" ng-change="changeField()" ng-model="client.parameters.bank_routing_number_wire.value">
                   <div ng-messages="manageForm.bank_routing_number_wire.$error">
                     <div ng-message="required">This is required.</div>
                   </div>
@@ -233,7 +234,7 @@
           <md-content class="md-padding">
             <section>
               <h1 class="md-headline">Formatting Instructions</h1>
-              <trix-editor angular-trix ng-change="makeDirty('parameters','format_instructions')" ng-model="client.parameters.format_instructions.value"></trix-editor>
+              <trix-editor angular-trix ng-change="changeField()" ng-model="client.parameters.format_instructions.value"></trix-editor>
             </section>
           </md-content>
         </md-tab>
@@ -254,8 +255,8 @@
               <md-list flex="">
                 <md-list-item class="md-3-line" ng-repeat="item in client.activity | orderBy:'-'" ng-click="null">
                  <div class="md-list-item-text" layout="column">
-                   <h4><i>{{ item.change_user }} on {{item.change_datetime}}<i></h4>
-                   <b>{{ item.change_description }}</b>
+                   <h4><b><i>{{ item.change_user }} on {{item.change_datetime}}<i></b></h4>
+                   <i>{{ item.change_description }}</i>
                  </div>
                </md-list-item>
              </md-list>
@@ -289,7 +290,7 @@
               <md-list>
                 <md-list-item ng-repeat="doc in client.documents"  class="noright">
                   <!-- <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" /> -->
-                  <p>{{doc.name}}</p>
+                  <p>{{doc.document_name}}</p>
                   <div>
                     <md-button class="md-secondary" ng-click="removeFile(doc,$event)" class="md-raised" aria-label="Remove File">
                       <ng-md-icon  icon="delete_forever"></ng-md-icon>

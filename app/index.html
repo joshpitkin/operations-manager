@@ -44,7 +44,7 @@
             </md-toolbar>
             <md-list-item ng-repeat="ut in ctrl.utilities">
                 <md-button ng-click="ctrl.toggleUtility(ut)" ng-class="{'selected' : it === ctrl.selected }">
-                  <md-icon  ng-bind="ut.icon"></md-icon>{{ut.name}}
+                  <md-icon  ng-bind="ut.icon"></md-icon>{{ut.label}}
                 </md-button>
             </md-list-item>
           </md-list>

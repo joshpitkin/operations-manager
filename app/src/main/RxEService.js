@@ -13,7 +13,8 @@
       config:{}
     }
     var utilities = [{
-        name:'Processors',
+        label:'Processors',
+        type:'processor',
         icon:'business',
         identifier:'Processor ID',
         description:'manage Processor',
@@ -21,7 +22,8 @@
         tabs:['Contact','History','Financial','Documents','Scripting']
       },
       {
-        name: 'Clients',
+        label: 'Clients',
+        type:'client',
         icon: 'contacts',
         identifier:'Client ID',
         call:'get-clients',
@@ -29,7 +31,8 @@
         tabs:['Contact','History','Financial','Documents','Scripting']
       },
       {
-        name: 'Employees',
+        label: 'Employees',
+        type:'employee',
         icon: 'people',
         identifier:'Employee ID',
         call:'get-employees',
@@ -37,7 +40,8 @@
         tabs:['Contact','Financial','Documents']
       },
       {
-        name: 'Claims',
+        label: 'Claims',
+        type:'claims',
         icon: 'timeline',
         description: 'Process Claims',
         tabs:[]
@@ -68,18 +72,27 @@
     //   return treeify(root,obj)
     // };
 
+    var decodeMessage = function(text){
+      try{
+        return JSON.parse(decodeURIComponent(text))
+      }catch(err){
+        return false
+      }
+    }
+
     return {
       utilities:utilities,
       getClients: function(utility){
-        console.log(utility.call)
         var deferred = $q.defer()
           $http({
                method : "GET",
                url : window.app.engine + "?cmd=" + utility.call
-           }).then(function mySucces(response) {
-                deferred.resolve( response.data.data)
-           }, function myError(response) {
-                deferred.reject( response)
+           }).then(function mySucces(msg) {
+
+             var response = decodeMessage(msg.data)
+             deferred.resolve(response.data)
+           }, function myError(msg) {
+                deferred.reject( msg)
            });
         return deferred.promise
       },
@@ -109,6 +122,7 @@
         $timeout( function(){
             deferred.resolve({
                 client_info:{
+                  client_type:'client',
                   client_id:1005,
                   client_name:'RxETEST',
                   client_status:'Active',
@@ -188,27 +202,72 @@
             }
         return obj
       },
-      prepareDirtyObject: function(o){
-        var obj  = {
-          client_info:{},
-          parameters:{}
-        }
+      prepareSaveObject: function(o){
         var rtn = []
-        for(var item in obj){
-          for(var prop in o[item]){
-            var newVal = o[item][prop]["value"]
-            var val = o[item][prop]["original-value"]
-            var cmd = (typeof val == 'undefined')?"insert":"update"
-            if(typeof newVal != 'undefined' && val != newVal){
-              rtn.push({
-                item_type:item,
-                item_name:prop,
-                item_val:newVal,
-                command:cmd
-              })
-            }
+        var clientId = o.client_info.client_id.value
+        var bSaveClient = false
+        for(var prop in o.client_info){
+          var newVal = o["client_info"][prop]["value"]
+          var origVal = o["client_info"][prop]["original-value"]
+          if(typeof newVal != 'undefined' && origVal != newVal) bSaveClient = true
+        }
+
+        if(bSaveClient){
+          var st = (o.client_info.client_status.value == true)?"Active":"Inactive"
+          rtn.push({
+            item_id:clientId,
+            item_type:'client_info',
+            item_name:'client_info',
+            item_val:{
+              client_name: o.client_info.client_name.value,
+              client_status:st
+            },
+            client_id:clientId,
+            command:'update'
+          })
+        }
+
+        for(var prop in o["parameters"]){
+          var newVal = o["parameters"][prop]["value"]
+          var origVal = o["parameters"][prop]["original-value"]
+          var objId = (typeof o["parameters"][prop]["id"] == 'undefined')?null:o["parameters"][prop]["id"]
+          var cmd = (objId == null)?"insert":"update"
+          if(typeof newVal != 'undefined' && origVal != newVal){
+            rtn.push({
+              item_id:objId,
+              item_type:'parameters',
+              item_name:prop,
+              item_val:newVal,
+              client_id:clientId,
+              command:cmd
+            })
           }
         }
+
+        o["documents"].map(function(doc){
+          var newDoc = doc["document_description"] + doc["document_status"]
+          var origDoc = doc["original-description"] + doc["original-status"]
+          var docId = (typeof doc.document_id == 'undefined')?null:doc.document_id
+          var cmd = (typeof doc.document_id == 'undefined')?"insert":"update"
+          cmd = (typeof doc.deleted == 'undefined')?cmd:"delete"
+          if(typeof newDoc != 'undefined' && origDoc != newDoc){
+            rtn.push({
+              item_type:'document',
+              client_id:clientId,
+              item_name:doc.document_name,
+              item_val:{
+                document_id:docId,
+                document_name:doc.document_name,
+                document_url:doc.document_url,
+                document_description:doc.document_description,
+                document_status:doc.document_status
+              },
+              command:cmd
+            })
+          }
+
+        })
+
         return rtn
       },
       getUnitedStates: function(){
@@ -216,6 +275,9 @@
       },
       getEntityTypes: function(){
         return [{type:'A'},{type:'B'},{type:'C'},{type:'D'}]
+      },
+      hideSave:function(){
+        $mdToast.hide()
       },
       showSave: function() {
         var deferred = $q.defer()
@@ -236,15 +298,20 @@
         });
         return deferred.promise
       },
-      saveChanges:function(dirtyList,utility){
+      saveChanges:function(saveObj,utility){
+        var data = {}
+        data.queue = saveObj
+        data.user_id = window.app.user.user_id
+        data = "data=" + encodeURIComponent(JSON.stringify(data))
         var deferred = $q.defer()
         $http({
              method : "POST",
-             url : window.app.engine + "?cmd=" + cmd,
+             url : window.app.engine + "?cmd=save-changes",
              data : data,
              headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
          }).then(function mySucces(msg) {
-            deferred.resolve(msg.data.data)
+            var response = decodeMessage(msg.data)
+            deferred.resolve(response.data)
          }, function myError(msg) {
             deferred.resolve(msg.data)
          });
@@ -258,14 +325,15 @@
                 url: window.app.engine + "?cmd=upload-file",
                 data: {file: file, 'targetPath': 'test'}
             }).then(function (msg) {
-                if(msg.data.success){
-                   deferred.resolve(msg.data.data)
-                }else{
-                  deferred.reject(msg.data)
-                }
+              var response = decodeMessage(msg.data)
+              if(response.success){
+                deferred.resolve(response.data)
+              }else{
+                deferred.reject(response.data)
+              }
                 // console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
             }, function (msg) {
-                deferred.reject(msg.data)
+                deferred.reject(msg)
             }
               // ,function (evt) {
               //   var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
@@ -276,16 +344,17 @@
           return deferred.promise
       },
       genericPost: function(cmd,data){
+        data.user_id = window.app.user.user_id
         var deferred = $q.defer()
-        data = "data=" + JSON.stringify(data)
-
+        data = "data=" + encodeURIComponent(JSON.stringify(data))
         $http({
              method : "POST",
              url : window.app.engine + "?cmd=" + cmd,
              data : data,
              headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
          }).then(function mySucces(msg) {
-            deferred.resolve(msg.data.data)
+           var response = decodeMessage(msg.data)
+           deferred.resolve(response.data)
          }, function myError(msg) {
             deferred.resolve(msg.data)
          });
@@ -316,6 +385,25 @@
 
         $mdDialog.show(confirm).then(function() {
           deferred.resolve(true)
+        }, function() {
+          // deferred.resolve(false)
+        });
+        return deferred.promise
+      },
+      genericInput: function(ev,message,title) {
+        var deferred = $q.defer()
+        // Appending dialog to document.body to cover sidenav in docs app
+        var input = $mdDialog.prompt()
+          .title(title)
+          .placeholder(title)
+          .textContent(message)
+          .ariaLabel(title)
+          .targetEvent(ev)
+          .ok('OK')
+          .cancel('Cancel');
+
+        $mdDialog.show(input).then(function(response) {
+          deferred.resolve(response)
         }, function() {
           // deferred.resolve(false)
         });
