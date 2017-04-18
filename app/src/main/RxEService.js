@@ -7,8 +7,6 @@
       engine:'http://localhost/rxe-api/operations-manager-engine.php',
       user:{user_id:'NWEAVER'},
       clients:[],
-      processors:[],
-      employees:[],
       rxebate:{},
       config:{}
     }
@@ -79,21 +77,35 @@
         return false
       }
     }
+    var filterClientType = function(type){
+      return window.app.clients.filter(function(c){
+        return c.client_type == type
+      })
+    }
+
+
 
     return {
       utilities:utilities,
       getClients: function(utility){
         var deferred = $q.defer()
+        if(window.app.clients.length > 0){
+            return deferred.promise
+            var rtn = filterClientType(utility.type)
+            deferred.resolve(rtn)
+        }else{
           $http({
                method : "GET",
-               url : window.app.engine + "?cmd=" + utility.call
+               url : window.app.engine + "?cmd=get-clients"
            }).then(function mySucces(msg) {
-
              var response = decodeMessage(msg.data)
-             deferred.resolve(response.data)
+             window.app.clients = response.data
+             var rtn = filterClientType(utility.type)
+             deferred.resolve(rtn)
            }, function myError(msg) {
                 deferred.reject( msg)
            });
+        }
         return deferred.promise
       },
       // getConfig:function(){
@@ -113,84 +125,84 @@
       //   }
       // },
       getUtilityInfo: function(id,utility){
-        /*
-          utilities: (processor,client,employee)
-          id: (processor_id,client_id,employee_id)
-        */
-        console.log(utility)
         var deferred = $q.defer()
-        $timeout( function(){
-            deferred.resolve({
-                client_info:{
-                  client_type:'client',
-                  client_id:1005,
-                  client_name:'RxETEST',
-                  client_status:'Active',
-                  client_insert_datetime:''
-                },
-                parameters:{
-                  entity_name:'test',
-                  entity_type:'test',
-                  entity_address:'123 road',
-                  entity_city:'houston',
-                  entity_state:'tx',
-                  entity_zip:'77777',
-                  entity_EIN:'123-4123098',
-                  bank_name:'wells fargo',
-                  bank_address:'123 road street',
-                  bank_city:'sugar land',
-                  bank_state:'tx',
-                  bank_zip:'88888',
-                  bank_account_holder:'mdsccripts',
-                  bank_account_number:'123123132',
-                  bank_routing_number_direct_deposit:'12312',
-                  bank_routing_number_wire:'12312',
-                  contact_name:'frank',
-                  contact_position:'president',
-                  contact_email:'frank@gmail',
-                  contact_phone:'123-123-1234',
-                  format_instructions:'testing <b>TEsTING</b> testing',
-                },
-                documents:[],
-                rebate_history:[
-                  {
-                    name: 'Point 1',
-                    y: 24,
-                  }, {
-                      name: 'Point 2',
-                      y: 15
-                  }, {
-                      name: 'Point 3',
-                      y: 18
-                  }
-                ],
-                activity:[
-                  {
-                      client_id:1005,
-                      change_description: "teset change",
-                      change_user: "NWEAVER",
-                      change_datetime: "3/12/85"
-                    },{client_id:1005,
-                      change_description: "teset change",
-                      change_user: "NWEAVER",
-                      change_datetime: "3/12/85"
-                    },{client_id:1005,
-                      change_description: "teset change",
-                      change_user: "NWEAVER",
-                      change_datetime: "3/12/85"
-                    }
-                  ]
-            })
-        }, 1000 );
+        // $timeout( function(){
+        //     deferred.resolve({
+        //         client_info:{
+        //           client_type:'client',
+        //           client_id:1005,
+        //           client_name:'RxETEST',
+        //           client_status:'Active',
+        //           client_insert_datetime:''
+        //         },
+        //         parameters:{
+        //           entity_name:'test',
+        //           entity_type:'test',
+        //           entity_address:'123 road',
+        //           entity_city:'houston',
+        //           entity_state:'tx',
+        //           entity_zip:'77777',
+        //           entity_EIN:'123-4123098',
+        //           bank_name:'wells fargo',
+        //           bank_address:'123 road street',
+        //           bank_city:'sugar land',
+        //           bank_state:'tx',
+        //           bank_zip:'88888',
+        //           bank_account_holder:'mdsccripts',
+        //           bank_account_number:'123123132',
+        //           bank_routing_number_direct_deposit:'12312',
+        //           bank_routing_number_wire:'12312',
+        //           contact_name:'frank',
+        //           contact_position:'president',
+        //           contact_email:'frank@gmail',
+        //           contact_phone:'123-123-1234',
+        //           format_instructions:'testing <b>TEsTING</b> testing',
+        //         },
+        //         documents:[],
+        //         rebate_history:[
+        //           {
+        //             name: 'Point 1',
+        //             y: 24,
+        //           }, {
+        //               name: 'Point 2',
+        //               y: 15
+        //           }, {
+        //               name: 'Point 3',
+        //               y: 18
+        //           }
+        //         ],
+        //         activity:[
+        //           {
+        //               client_id:1005,
+        //               activity_text: "teset change",
+        //               activity_owner: "NWEAVER",
+        //               activity_datetime: "3/12/85"
+        //             },{client_id:1005,
+        //               activity_text: "teset change",
+        //               activity_owner: "NWEAVER",
+        //               activity_datetime: "3/12/85"
+        //             },{client_id:1005,
+        //               activity_text: "teset change",
+        //               activity_owner: "NWEAVER",
+        //               activity_datetime: "3/12/85"
+        //             }
+        //           ]
+        //     })
+        // }, 1000 );
 
-          // $http({
-          //      method : "GET",
-          //      url : window.app.engine + "?cmd=get-client-info&client_id="+client_id
-          //  }).then(function mySucces(response) {
-          //       return window.app.clients
-          //  }, function myError(response) {
-          //     return {};
-          //  });
+          $http({
+               method : "GET",
+               url : window.app.engine + "?cmd=get-client-info&id="+id
+           }).then(function mySucces(msg) {
+             var response = decodeMessage(msg.data)
+                if(response.success){
+                  deferred.resolve(response.data)
+                }else{
+                  deferred.reject(response)
+                }
+           }, function myError(msg) {
+              deferred.reject(msg.data)
+           });
           return deferred.promise
       },
       prepareCleanObject: function(o){

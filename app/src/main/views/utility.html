@@ -2,7 +2,7 @@
   <md-toolbar class='rx-select-client'>
       <div class="md-toolbar-tools">
         <md-input-container flex="40">
-          <md-select ng-change="loadClient(client_opt.client_id)" ng-model="client.client_info" placeholder="Select {{utility.name.slice(0,-1)}}">
+          <md-select ng-change="loadClient()" ng-model="activeClient" placeholder="Select {{utility.name.slice(0,-1)}}">
             <md-option ng-repeat="client_opt in clients" value="{{client_opt.client_id}}">{{client_opt.client_name}}</md-option>
           </md-select>
         </md-input-container>
@@ -255,8 +255,8 @@
               <md-list flex="">
                 <md-list-item class="md-3-line" ng-repeat="item in client.activity | orderBy:'-'" ng-click="null">
                  <div class="md-list-item-text" layout="column">
-                   <h4><b><i>{{ item.change_user }} on {{item.change_datetime}}<i></b></h4>
-                   <i>{{ item.change_description }}</i>
+                   <h4><b><i>{{ item.activity_owner }} on {{item.activity_datetime}}<i></b></h4>
+                   <i>{{ item.activity_text }}</i>
                  </div>
                </md-list-item>
              </md-list>

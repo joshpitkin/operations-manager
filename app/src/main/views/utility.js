@@ -14,6 +14,7 @@
              active:false,
              client_uid:''
            }
+           $scope.activeClient = {}
            $scope.loadClients = function(){
              $rootScope.loading = true
              $scope.clients = []
@@ -30,9 +31,9 @@
           //  $scope.clients = RxEService.getClients($scope.utility)
            $scope.entity_types = RxEService.getEntityTypes()
            $scope.unitedStates = RxEService.getUnitedStates()
-           $scope.loadClient = function(client_id){
+           $scope.loadClient = function(){
              $rootScope.loading = true
-             RxEService.getUtilityInfo(client_id,$scope.utility).then(function(obj){
+             RxEService.getUtilityInfo($scope.activeClient,$scope.utility).then(function(obj){
                $scope.client = obj
                $scope.setReady()
              })
@@ -43,9 +44,9 @@
              var actObj = {
                client_id:$scope.client.client_info.client_id.value,
                client_name:$scope.client.client_info.client_name.value,
-               change_description: newActivity,
-               change_user: window.app.user.user_id,
-               change_datetime: moment().format("YYYY-MM-DD HH:mm:ss"),
+               activity_text: newActivity,
+               activity_owner: window.app.user.user_id,
+               activity_datetime: moment().format("YYYY-MM-DD HH:mm:ss"),
                dirty:drty
              }
              $scope.client.activity.push(actObj)
@@ -139,8 +140,8 @@
                   item_type:"activity",
                   client_id:$scope.client.client_info.client_id.value,
                   item_val:{client:newAct.client_id,
-                            text: newAct.change_description,
-                            user:newAct.change_user
+                            text: newAct.activity_text,
+                            user:newAct.activity_owner
                           }
                 })})
 
@@ -159,7 +160,7 @@
                           $scope.client.parameters[item]["original-value"] = post.parameter_value
                         break;
                       case 'activity':
-                        var actObj = $scope.client.activity.filter(function(a){return a.change_description == t.post.item_val.text})
+                        var actObj = $scope.client.activity.filter(function(a){return a.activity_text == t.post.item_val.text})
                         if(actObj.length > 0){
                           actObj[0].dirty = false
                         }
