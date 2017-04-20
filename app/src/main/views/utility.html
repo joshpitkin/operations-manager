@@ -1,3 +1,6 @@
+<md-button ng-click="devel()" class="md-raised" aria-label="Learn More">
+  log scope
+</md-button>
 <md-content>
   <md-toolbar class='rx-select-client'>
       <div class="md-toolbar-tools">
@@ -255,7 +258,7 @@
               <md-list flex="">
                 <md-list-item class="md-3-line" ng-repeat="item in client.activity | orderBy:'-'" ng-click="null">
                  <div class="md-list-item-text" layout="column">
-                   <h4><b><i>{{ item.activity_owner }} on {{item.activity_datetime}}<i></b></h4>
+                   <h4><b><i>{{ item.activity_owner }} on {{formatDate(item.activity_datetime)}}<i></b></h4>
                    <i>{{ item.activity_text }}</i>
                  </div>
                </md-list-item>
@@ -288,17 +291,18 @@
                     <li ng-repeat="f in client.files" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}</li>
                 </ul>
               <md-list>
-                <md-list-item ng-repeat="doc in client.documents"  class="noright">
-                  <!-- <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" /> -->
-                  <p>{{doc.document_name}}</p>
-                  <div>
-                    <md-button class="md-secondary" ng-click="removeFile(doc,$event)" class="md-raised" aria-label="Remove File">
-                      <ng-md-icon  icon="delete_forever"></ng-md-icon>
-                    </md-button>
-                    <md-button class="md-secondary" ng-click="download(doc,$event)" class="md-raised" aria-label="Remove File">
-                      <ng-md-icon  icon="cloud_download"></ng-md-icon>
-                    </md-button>
-                  </div>
+                <md-list-item ng-class="(doc.document_status == 'Inactive')?'deleted-file':''" ng-repeat="doc in client.documents"  class="noright">
+                    <!-- <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar" /> -->
+                    <div><b style='display:block'>{{doc.document_description}}</b><small style="font-style:italic;font-size:65%">{{doc.document_name}}</small></div>
+                    <div>
+                      <md-button class="md-secondary" ng-click="removeFile(doc,$event)" class="md-raised" aria-label="Remove File">
+                        <ng-md-icon  icon="delete_forever"></ng-md-icon>
+                      </md-button>
+                      <md-button class="md-secondary" ng-click="download(doc,$event)" class="md-raised" aria-label="Remove File">
+                        <ng-md-icon  icon="cloud_download"></ng-md-icon>
+                      </md-button>
+                    </div>
+
                 </md-list-item>
               </md-list>
               <!-- <div layout="row">

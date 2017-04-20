@@ -11,3 +11,7 @@ md-toolbar md-select,md-toolbar md-select-value{
     margin: 10px;
     cursor:pointer;
 }
+.deleted-file{
+  text-decoration: line-through;
+  color: red;
+}

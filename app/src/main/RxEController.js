@@ -21,7 +21,8 @@
     self.selectedUtility     = null
     self.toggleUtility   = function( ut ) {
       $rootScope.utility = ut
-      $rootScope.$broadcast('changeUtility');
+      // console.log(ut)
+      $rootScope.$broadcast('changeUtility')
       // $rootScope.showUtility = (ut.name == 'Claims')
 
       self.selectedUtility = angular.isNumber(ut) ? self.utilities[rt] : ut;

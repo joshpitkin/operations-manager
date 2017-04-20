@@ -90,7 +90,6 @@
       getClients: function(utility){
         var deferred = $q.defer()
         if(window.app.clients.length > 0){
-            return deferred.promise
             var rtn = filterClientType(utility.type)
             deferred.resolve(rtn)
         }else{
@@ -205,13 +204,24 @@
            });
           return deferred.promise
       },
-      prepareCleanObject: function(o){
-        var obj = {}
-          for(var prop in o){
-              obj[prop] = {}
-              obj[prop]["value"] = o[prop]
-              obj[prop]["original-value"] = o[prop]
-            }
+      prepareCleanObject: function(o,item){
+        // {client_info:{},parameters:{},activity:[],documents:[]}
+        switch(item){
+          case "client_info":
+            var obj = {}
+            for(var prop in o){
+                obj[prop] = {}
+                obj[prop]["value"] = o[prop]
+                obj[prop]["original-value"] = o[prop]
+              }
+            break;
+          case "documents":
+            var obj = o.map(function(r){
+              r["original-status"] = r.document_status
+              r["original-description"] = r.document_description
+            })
+          default: return o;
+        }
         return obj
       },
       prepareSaveObject: function(o){

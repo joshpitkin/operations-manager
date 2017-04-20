@@ -25,7 +25,7 @@
            }
            $scope.$on('changeUtility', function () {
               $scope.utility = $rootScope.utility
-               $scope.loadClients()
+              $scope.loadClients()
 
            });
           //  $scope.clients = RxEService.getClients($scope.utility)
@@ -34,7 +34,10 @@
            $scope.loadClient = function(){
              $rootScope.loading = true
              RxEService.getUtilityInfo($scope.activeClient,$scope.utility).then(function(obj){
-               $scope.client = obj
+               $scope.client = angular.copy($scope.defaultClient);
+               for(item in $scope.client){
+                 $scope.client[item] = RxEService.prepareCleanObject(obj[item],item)
+               }
                $scope.setReady()
              })
            }
@@ -62,8 +65,8 @@
                 .cancel("Cancel")
 
               $mdDialog.show(confirm).then(function(newActivity){
-                $scope.makeDirty('client_info','client_status')
-                addActivity(newActivity)
+                // $scope.makeDirty('client_info','client_status')
+                $scope.addActivity(newActivity)
               }, function() {console.log("cancelled new activity")})
             };
            $scope.setReady = function(){
@@ -92,7 +95,7 @@
                   }
                   RxEService.genericPost("insert-client",data).then(function(msg){
                     $scope.client = angular.copy($scope.defaultClient);
-                    $scope.client.client_info = RxEService.prepareCleanObject(msg[0])
+                    $scope.client.client_info = RxEService.prepareCleanObject(msg[0],'client_info')
                     $scope.clients.push(msg[0])
                     $scope.addActivity("Added " + $scope.client.client_info.client_name.value + " to RxEBATE client base",false)
 
@@ -118,21 +121,29 @@
                //aggregate changes
                $rootScope.loading = true
                var saveObj = RxEService.prepareSaveObject($scope.client)
-               if(saveObj.length == 0) return;
+               var activityObj = $scope.client.activity.filter(function(act){return act.dirty === true})
+               if(saveObj.length == 0 && activityObj.length == 0) return;
                //add changes to change-log
-               var activityString = "Changed " + saveObj.map(function(r){
-                 var newVal = r.item_val
-                 if(r.item_name == 'format_instructions'){
-                   return r.item_name.replace(/_/g, ' ')
-                 }
-                 if(typeof newVal == 'object'){
-                   newVal = JSON.stringify(r.item_val).replace(/"/g, '').slice(0,-1).slice(1).replace(/,/g,", ").replace(/_/g, ' ')
-                 }
+               if(saveObj.length > 0){
+                 var activityString = "Changed " + saveObj.map(function(r){
+                   var newVal = "[" + r.item_val + "]"
+                   var itemFrom = "[" + r.item_name + "]"
+                   if(r.item_name == 'format_instructions'){
+                     return r.item_name.replace(/_/g, ' ')
+                   }
+                   if(r.item_type == 'document'){
+                     itemFrom = "document" + itemFrom
+                     newVal = r.item_val.document_description + " (" + r.item_val.document_status + ")"
+                   }
+                   if(typeof newVal == 'object'){
+                     newVal = JSON.stringify(r.item_val).replace(/"/g, '').slice(0,-1).slice(1).replace(/,/g,", ").replace(/_/g, ' ')
+                   }
 
-                 return r.item_name.replace(/_/g, ' ') + " to " + newVal
-               }).join(", ")
-               //add change-log to SAVE Object
-               $scope.addActivity(activityString)
+                   return itemFrom.replace(/_/g, ' ') + " to " + newVal
+                 }).join(", ")
+                 //add change-log to SAVE Object
+                 $scope.addActivity(activityString)
+               }
                $scope.client.activity
                 .filter(function(act){return act.dirty === true})
                 .map(function(newAct){saveObj.push({
@@ -170,7 +181,7 @@
                         if(doc.length > 0){
                           doc[0].dirty = false
                           doc[0]["original-status"] = post.document_status
-                          doc[0]["document_description"] = post.document_description
+                          doc[0]["document-description"] = post.document_description
                           doc[0]["document_id"] = post.document_id
                         }
                         break;
@@ -211,14 +222,33 @@
              })
              }
            $scope.removeFile = function(file,$event){
-             RxEService.genericConfim($event,"Are you sure you want to remove this file?","Remove File").then(function(resp){
-               RxEService.genericPost("remove-file",file).then(function(msg){
-                 var ind = $scope.client.documents.indexOf(file)
-                 $scope.client.documents.splice(ind,1)
-               })
-             })
-           }
+            //  RxEService.genericConfim($event,"Are you sure you want to remove this file?","Remove File").then(function(resp){
+              //  RxEService.genericPost("remove-file",file).then(function(msg){
+                //  var ind = $scope.client.documents.indexOf(file)
+                //  $scope.client.documents.splice(ind,1)
+                file.document_status = "Inactive"
+                file.dirty = true
+                //  msg.document_status = "Active"
+                //  msg.dirty = true
+                //  $scope.client.documents.push(msg)
+                 $scope.beginSave()
 
+
+
+              //  })
+            //  })
+           }
+           $scope.formatDate = function(date){
+             if(date.date){
+               return moment(date.date).format("YYYY-MM-DD")
+             }else{
+               return moment(date).format("YYYY-MM-DD")
+             }
+
+           }
+           $scope.devel = function(){
+             console.log($scope.client)
+           }
     }]
 
     return {
