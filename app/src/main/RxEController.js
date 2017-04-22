@@ -17,7 +17,7 @@
     var self = this
     $rootScope.showUtility = false
     $rootScope.loading = false
-    self.utilities     = RxEService.utilities
+    self.utilities     = window.app.utilities
     self.selectedUtility     = null
     self.toggleUtility   = function( ut ) {
       $rootScope.utility = ut

@@ -10,28 +10,35 @@
            $scope.defaultClient = {client_info:{},parameters:{},activity:[],documents:[]}
            $scope.clientIsLoaded = false
            $scope.fileList = []
+           $scope.statusOptions = ['Contracted','Active','blaa']
            $scope.dummy = {
-             active:false,
              client_uid:''
            }
            $scope.activeClient = {}
            $scope.loadClients = function(){
              $rootScope.loading = true
              $scope.clients = []
-             RxEService.getClients($scope.utility).then(function(clients){
+             RxEService.getClients($scope.utility.type).then(function(clients){
                if(clients) $scope.clients = clients
                 $rootScope.loading = false
              })
            }
            $scope.$on('changeUtility', function () {
+              $rootScope.showUtility = false
+              $scope.clientIsLoaded = false
               $scope.utility = $rootScope.utility
               $scope.loadClients()
 
            });
           //  $scope.clients = RxEService.getClients($scope.utility)
+           $scope.download = function(doc,$event){
+             alert("NEED TO SCRIPT THIS")
+             console.log(doc)
+           }
            $scope.entity_types = RxEService.getEntityTypes()
            $scope.unitedStates = RxEService.getUnitedStates()
            $scope.loadClient = function(){
+             console.log('loading')
              $rootScope.loading = true
              RxEService.getUtilityInfo($scope.activeClient,$scope.utility).then(function(obj){
                $scope.client = angular.copy($scope.defaultClient);
@@ -71,7 +78,7 @@
             };
            $scope.setReady = function(){
              $scope.dummy.client_uid = $scope.utility.label[0] + $scope.client.client_info.client_id.value
-             $scope.dummy.active = $scope.client.client_info.client_status.value == "Active"
+            //  $scope.dummy.active = $scope.client.client_info.client_status.value == "Active"
              $scope.clientIsLoaded = true
              $rootScope.showUtility = true
              $rootScope.loading = false
@@ -106,12 +113,6 @@
               }, function() {});
             };
            $scope.changeField = function(item_name){
-             switch(item_name){
-               case "client_status":
-
-                $scope.client.client_info.client_status.value = ($scope.dummy.active)?"Active":"Inactive"
-               break;
-             }
              $scope.beginSave()
            }
            $scope.beginSave = function(item_name){
@@ -222,30 +223,11 @@
              })
              }
            $scope.removeFile = function(file,$event){
-            //  RxEService.genericConfim($event,"Are you sure you want to remove this file?","Remove File").then(function(resp){
-              //  RxEService.genericPost("remove-file",file).then(function(msg){
-                //  var ind = $scope.client.documents.indexOf(file)
-                //  $scope.client.documents.splice(ind,1)
                 file.document_status = "Inactive"
                 file.dirty = true
-                //  msg.document_status = "Active"
-                //  msg.dirty = true
-                //  $scope.client.documents.push(msg)
                  $scope.beginSave()
-
-
-
-              //  })
-            //  })
            }
-           $scope.formatDate = function(date){
-             if(date.date){
-               return moment(date.date).format("YYYY-MM-DD")
-             }else{
-               return moment(date).format("YYYY-MM-DD")
-             }
-
-           }
+           $scope.formatDate = RxEService.formatDate
            $scope.devel = function(){
              console.log($scope.client)
            }

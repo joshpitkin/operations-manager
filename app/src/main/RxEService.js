@@ -7,43 +7,112 @@
       engine:'http://localhost/rxe-api/operations-manager-engine.php',
       user:{user_id:'NWEAVER'},
       clients:[],
+      periods:[],
       rxebate:{},
-      config:{}
+      config:{},
+      PHI_documents:[]
     }
+    var methods = [{
+        name:'RECEIVE',
+        label:'Download FTP',
+        icon:'file_download',
+      },{
+        name:'REFORMAT',
+        label:'Reformat File',
+        icon:'spellcheck'
+      },{
+        name:'INSERT',
+        label:'Import Claims to RxEBASE',
+        icon:'archive'
+      },{
+        name:'AGGREGATE',
+        label:'Aggregate/Format for Processor',
+        icon:'call_merge'
+      },{
+        name:'CREATE',
+        label:'',
+        icon:'share',
+        hidden:true
+      },{
+        name:'EXPORT',
+        label:'Export to Processor',
+        icon:'send'
+      },{
+        name:'DESTROY',
+        label:'Destroy PHI',
+        icon:'delete_forever'
+    }]
     var utilities = [{
-        label:'Processors',
-        type:'processor',
-        icon:'business',
-        identifier:'Processor ID',
-        description:'manage Processor',
-        call:'get-processors',
-        tabs:['Contact','History','Financial','Documents','Scripting']
-      },
-      {
-        label: 'Clients',
-        type:'client',
-        icon: 'contacts',
-        identifier:'Client ID',
-        call:'get-clients',
-        description: 'manage clients',
-        tabs:['Contact','History','Financial','Documents','Scripting']
-      },
-      {
-        label: 'Employees',
-        type:'employee',
-        icon: 'people',
-        identifier:'Employee ID',
-        call:'get-employees',
-        description: 'Manage Employees',
-        tabs:['Contact','Financial','Documents']
-      },
-      {
-        label: 'Claims',
-        type:'claims',
-        icon: 'timeline',
-        description: 'Process Claims',
-        tabs:[]
+          label:'Processors',
+          type:'processor',
+          icon:'business',
+          identifier:'Processor ID',
+          description:'manage Processor',
+          call:'get-processors',
+          tabs:['Contact','History','Financial','Documents','Scripting']
+        },{
+          label: 'Clients',
+          type:'client',
+          icon: 'contacts',
+          identifier:'Client ID',
+          call:'get-clients',
+          description: 'manage clients',
+          tabs:['Contact','History','Financial','Documents','Scripting']
+        },{
+          label: 'Employees',
+          type:'employee',
+          icon: 'people',
+          identifier:'Employee ID',
+          call:'get-employees',
+          description: 'Manage Employees',
+          tabs:['Contact','Financial','Documents']
+        },{
+          label: 'Claims',
+          type:'claims',
+          icon: 'timeline',
+          description: 'Process Claims',
+          tabs:[]
       }];
+    window.app.methods = methods
+    window.app.utilities = utilities
+    var genericGet = function(cmd,data){
+      var deferred = $q.defer()
+      var params = ''
+      if(data){
+        for (key in data){
+          console.log('key')
+        }
+      }
+      var queryString = "?cmd=" + cmd + params
+      $http({
+           method : "GET",
+           url : window.app.engine + queryString
+       }).then(function mySucces(msg) {
+         var response = decodeMessage(msg.data)
+         if(response.success){
+           deferred.resolve(response.data)
+         }else{
+
+         }
+       }, function myError(msg) {
+            deferred.reject( msg)
+       });
+      return deferred.promise
+    }
+    genericGet("get-quarters").then(function(msg){
+      window.app.periods = msg||[]
+    })
+    genericGet("get-PHI-documents").then(function(msg){
+      if(msg){
+        var ixs = app.methods.map(function(r){return r.name})
+        window.app.PHI_documents = msg.map(function(r){
+          var loc = ixs.indexOf(r.change_type)
+
+          r.icon = window.app.methods[loc].icon
+        })
+      }
+      window.app.PHI_documents = msg||[]
+    })
 
     // function treeify(root, allRows) {
     //      // search for all the rows that have a predecessor_key matching the root class_key
@@ -83,14 +152,12 @@
       })
     }
 
-
-
     return {
       utilities:utilities,
-      getClients: function(utility){
+      getClients: function(clientType){
         var deferred = $q.defer()
         if(window.app.clients.length > 0){
-            var rtn = filterClientType(utility.type)
+            var rtn = filterClientType(clientType)
             deferred.resolve(rtn)
         }else{
           $http({
@@ -99,7 +166,7 @@
            }).then(function mySucces(msg) {
              var response = decodeMessage(msg.data)
              window.app.clients = response.data
-             var rtn = filterClientType(utility.type)
+             var rtn = filterClientType(clientType)
              deferred.resolve(rtn)
            }, function myError(msg) {
                 deferred.reject( msg)
@@ -235,18 +302,19 @@
         }
 
         if(bSaveClient){
-          var st = (o.client_info.client_status.value == true)?"Active":"Inactive"
+          // var st = (o.client_info.client_status.value == true)?"Active":"Inactive"
           rtn.push({
             item_id:clientId,
             item_type:'client_info',
             item_name:'client_info',
             item_val:{
               client_name: o.client_info.client_name.value,
-              client_status:st
+              client_status:o.client_info.client_status.value
             },
             client_id:clientId,
             command:'update'
           })
+          window.app.clients = []
         }
 
         for(var prop in o["parameters"]){
@@ -382,6 +450,7 @@
          });
          return deferred.promise
       },
+      genericGet:genericGet,
       genericAlert: function(ev,message,title) {
          $mdDialog.show(
            $mdDialog.alert()
@@ -430,6 +499,14 @@
           // deferred.resolve(false)
         });
         return deferred.promise
+      },
+      formatDate: function(date){
+        if(date.date){
+          return moment(date.date).format("YYYY-MM-DD")
+        }else{
+          return moment(date).format("YYYY-MM-DD")
+        }
+
       }
     }
   }
