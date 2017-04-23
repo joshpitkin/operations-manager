@@ -24,31 +24,32 @@ md-icon.inline-method{
   margin:0px;
   border-radius:15px;
 }
-.method-RECEIVE,button.method-RECEIVE{
-  background:#FF600B;
-  color:black;
+
+
+.method-RECEIVE,.md-button.md-fab.md-mini.method-RECEIVE{
+  background:#f9ff0b;
 }
-.method-REFORMAT{
+.method-REFORMAT,.md-button.md-fab.md-mini.method-REFORMAT{
   background:#617EE7;
-  color:white;
 }
-.method-INSERT{
+.method-INSERT,.md-button.md-fab.md-mini.method-INSERT{
+  background:#5fe188;
+}
+.method-AGGREGATE,.md-button.md-fab.md-mini.method-AGGREGATE{
   background:#FFB50B;
-  color:black;
 }
-.method-AGGREGATE{
-  background:#FFB50B;
-  color:black;
+.method-CREATE,.md-button.md-fab.md-mini.method-CREATE{
+  background:#00f1ff;
 }
-.method-CREATE{
-  background:gray;
-  color:white;
+.method-EXPORT,.md-button.md-fab.md-mini.method-EXPORT{
+  background:#f25c92;
 }
-.method-EXPORT{
-  background:#FFB50B;
-  color:black;
+.method-DESTROY,.md-button.md-fab.md-mini.method-DESTROY{
+  background:#a8a8a8;
 }
-.method-DESTROY{
-  background:black;
-  color:white;
+.select-panel{
+  padding:5px;
+  border-radius:5px;
+  background: #f0f0f0;
+  margin:5px;
 }

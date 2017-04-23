@@ -14,7 +14,8 @@
         <md-icon ng-bind="(method.icon)"></md-icon>
       </md-button>
     </div>
-    <div flex="40">
+    <span flex></span>
+    <div>
       <md-input-container>
         <md-select ng-model="activeClient" placeholder="Select Processor">
           <md-option ng-repeat="proc in processors" value="{{proc.client_id}}">{{proc.client_name}}</md-option>
@@ -23,36 +24,44 @@
     </div>
   </div>
   <md-content ng-show="(method!='')" class="md-padding">
-    <div layout="row">
+    <div layout="row" layout-xs="column">
       <div flex></div>
-      <div ng-show="(showClients)" flex="40" flex>
-        <md-subheader class="md-no-sticky">Select Client(s)</md-subheader>
-        <md-list-item  class='md-list-narrow' ng-repeat="client in clients" class=''>
+      <div class='select-panel' ng-show="(config.showClients)" flex="40" flex-xs="100">
+        <center><h3>Select Client(s)</h3></center>
+        <md-list-item class='md-list-narrow' ng-repeat="client in clients" class=''>
           <p> {{ client.client_name }} </p>
-          <md-checkbox class="md-secondary" ng-model="client.selected"></md-checkbox>
+          <md-checkbox   ng-change="changeSelection('clients',client)"  class="md-secondary" ng-model="client.selected"></md-checkbox>
         </md-list-item>
       </div>
       <div flex></div>
-      <div ng-show="(showPeriods)" flex="30">
-        <md-subheader class="md-no-sticky">Select Period</md-subheader>
-        <md-list-item class='md-list-narrow' ng-repeat="pd in periods">
+      <div class='select-panel' ng-show="(config.showPeriods)" flex="30" flex-xs="100">
+        <center><h3>Select Period</h3></center>
+        <md-list-item  class='md-list-narrow' ng-repeat="pd in periods">
           <p> {{ pd.year_quarter_month}}</p>
-          <md-checkbox class="md-secondary" ng-model="pd.selected"></md-checkbox>
+          <md-checkbox  ng-change="changeSelection('periods',pd)" class="md-secondary" ng-model="pd.selected"></md-checkbox>
         </md-list-item>
       </div>
       <div flex></div>
     </div>
     <div layout="row">
-      <div ng-show="(showDocuments)" flex='100'>
-        <md-subheader class="md-no-sticky">Select Document(s)</md-subheader>
+      <div style="max-height:200px; overflow-y: scroll" class='select-panel' ng-show="(config.showDocuments)" flex='100'>
+        <center><h3>Select Document(s)</h3></center>
         <md-list-item class='md-list-narrow' ng-repeat="doc in PHI_documents">
           <md-icon ng-class="('method-' + doc.change_type)" class="inline-method" ng-bind="(doc.icon)"></md-icon>
           <b>{{doc.client_name}} - {{doc.period}}</b><small style="font-style:italic;font-size:65%"> - - ({{doc.file_name}})</small>
-          <md-checkbox aria-label="doc.selected" class="md-secondary" ng-model="pd.selected"></md-checkbox>
+          <md-checkbox  ng-change="changeSelection('doucments',doc)"  ng-show='config.selectDocuments' aria-label="doc.selected" class="md-secondary" ng-model="pd.selected"></md-checkbox>
         </md-list-item>
       </div>
     </div>
   </md-content>
-
+<div layout="row">
+  <span flex></span>
+  <md-button ng-click="devel()" class="md-raised md-accent" aria-label="Learn More">
+    GO
+  </md-button>
+  <span flex></span>
+</div>
 
 </md-content>
+<!-- <input type="file" id="fileInput" onchange="handleFiles(this.files)"> -->
+<!-- <input file-model="dummy" type="file" id="addFile" ng-change="devel"/> -->

@@ -16,6 +16,7 @@
         name:'RECEIVE',
         label:'Download FTP',
         icon:'file_download',
+        hidden:true
       },{
         name:'REFORMAT',
         label:'Reformat File',
@@ -364,7 +365,7 @@
         return getUnitedStates()
       },
       getEntityTypes: function(){
-        return [{type:'A'},{type:'B'},{type:'C'},{type:'D'}]
+        return [{type:'Contractor'},{type:'Pharmacy'},{type:'Specialty'}]
       },
       hideSave:function(){
         $mdToast.hide()
