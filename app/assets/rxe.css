@@ -15,3 +15,41 @@ md-toolbar md-select,md-toolbar md-select-value{
   text-decoration: line-through;
   color: red;
 }
+
+md-list-item.md-list-narrow, md-list-item.md-list-narrow .md-list-item-inner {
+    min-height: 20px;
+    height: 25px;
+}
+md-icon.inline-method{
+  margin:0px;
+  border-radius:15px;
+}
+
+
+.method-RECEIVE,.md-button.md-fab.md-mini.method-RECEIVE{
+  background:#f9ff0b;
+}
+.method-REFORMAT,.md-button.md-fab.md-mini.method-REFORMAT{
+  background:#617EE7;
+}
+.method-INSERT,.md-button.md-fab.md-mini.method-INSERT{
+  background:#5fe188;
+}
+.method-AGGREGATE,.md-button.md-fab.md-mini.method-AGGREGATE{
+  background:#FFB50B;
+}
+.method-CREATE,.md-button.md-fab.md-mini.method-CREATE{
+  background:#00f1ff;
+}
+.method-EXPORT,.md-button.md-fab.md-mini.method-EXPORT{
+  background:#f25c92;
+}
+.method-DESTROY,.md-button.md-fab.md-mini.method-DESTROY{
+  background:#a8a8a8;
+}
+.select-panel{
+  padding:5px;
+  border-radius:5px;
+  background: #f0f0f0;
+  margin:5px;
+}

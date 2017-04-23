@@ -51,17 +51,8 @@
         </md-sidenav>
 
         <md-content flex layout-padding id="content">
-          <!-- <md-button class="md-raised" ng-click="showActionToast()">
-            Show Toast
-          </md-button> -->
-          <rx-utility ng-if='ctrl.selectedUtility != null' utility="ctrl.selectedUtility"></rx-utility>
-          <!-- <clients-view ng-if="ctrl.selected.name == 'Manage Clients'"></clients-view>
-          <claims-view  ng-if="ctrl.selected.name == 'Process Claims'"></claims-view>
-          <employees-view  ng-if="ctrl.selected.name == 'Manage Employees'"></employees-view>
-          <processors-view  ng-if="ctrl.selected.name == 'Manage Processors'"></processors-view> -->
-          <!-- <md-button class="share" md-no-ink ng-click="ctrl.makeContact(ctrl.selected)" aria-label="Share with {{ ctrl.selected.name }}">
-            <md-icon md-svg-icon="share"></md-icon>
-          </md-button> -->
+          <rx-utility ng-if="(ctrl.selectedUtility != null) && (ctrl.selectedUtility.type != 'claims')" utility="ctrl.selectedUtility"></rx-utility>
+          <rx-claims ng-if="(ctrl.selectedUtility != null) && (ctrl.selectedUtility.type == 'claims')" utility="ctrl.selectedUtility"></rx-claims>
         </md-content>
 
     </div>
@@ -82,6 +73,7 @@
     <script src="./src/main/RxEController.js"></script>
     <script src="./src/main/RxEService.js"></script>
     <script src="./src/main/views/utility.js"></script>
+    <script src="./src/main/views/claims.js"></script>
     <script src="./src/lib/united_states.js"></script>
     <!-- <script src="./src/main/views/employees.js"></script>
     <script src="./src/main/views/processors.js"></script>
@@ -103,8 +95,8 @@
                       .icon("phone"      , "./assets/svg/phone.svg"       , 512);
 
                       $mdThemingProvider.theme('default')
-                          .primaryPalette('blue')
-                          .accentPalette('red');
+                          .primaryPalette('indigo')
+                          .accentPalette('deep-orange');
 
               });
 
