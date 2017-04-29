@@ -5,12 +5,19 @@
   function RxEService($q,$rootScope,$http,$mdToast,$mdDialog,$timeout,Upload){
     window.app = {
       engine:'http://localhost/rxe-api/operations-manager-engine.php',
+      production:false,
       user:{user_id:'NWEAVER'},
       clients:[],
       periods:[],
       rxebate:{},
       config:{},
       PHI_documents:[]
+    }
+    var mimicAjax = function(deferred){
+      $timeout( function(){
+        deferred.resolve([])
+      },1000)
+      return deferred.promise
     }
     var methods = [{
         name:'RECEIVE',
@@ -78,13 +85,14 @@
     window.app.utilities = utilities
     var genericGet = function(cmd,data){
       var deferred = $q.defer()
-      var params = ''
+      if(!window.app.production) return mimicAjax(deferred)
+      var params = []
       if(data){
         for (key in data){
-          console.log('key')
+          params.push(key + "=" + data[key])
         }
       }
-      var queryString = "?cmd=" + cmd + params
+      var queryString = "?cmd=" + cmd + params.join("&")
       $http({
            method : "GET",
            url : window.app.engine + queryString
@@ -102,7 +110,7 @@
     }
     genericGet("get-quarters").then(function(msg){
       window.app.periods = msg||[]
-    })
+    },function(msg){console.log("ERROR in get-quarters",msg)})
     genericGet("get-PHI-documents").then(function(msg){
       if(msg){
         var ixs = app.methods.map(function(r){return r.name})
@@ -113,32 +121,7 @@
         })
       }
       window.app.PHI_documents = msg||[]
-    })
-
-    // function treeify(root, allRows) {
-    //      // search for all the rows that have a predecessor_key matching the root class_key
-    //      var children = allRows.filter(function(e) {
-    //        if(e.predecessor_keys !== null){
-    //         return e.predecessor_keys.indexOf(root.item_id) !== -1;
-    //       }else{
-    //         return false
-    //       }
-    //      });
-    //      // add those buckets to a children property of the root
-    //      root.children = children;
-    //      children.map(function(e, ix) {
-    //         // recurse that function for all the children
-    //         treeify(e, allRows);
-    //      });
-    //   }
-    //
-    // function buildConfig(obj) {
-    //   var obj_map = obj.map(function(r){return r.item_id})
-    //   var props = obj.filter(function(r){return r.item_type === 'item property'})
-    //
-    //   var root = obj.filter(function(r){return r.item_id == 1})[0]
-    //   return treeify(root,obj)
-    // };
+    },function(msg){console.log("ERROR in get-PHI-documents",msg)})
 
     var decodeMessage = function(text){
       try{
@@ -157,6 +140,7 @@
       utilities:utilities,
       getClients: function(clientType){
         var deferred = $q.defer()
+        if(!window.app.production) return mimicAjax(deferred)
         if(window.app.clients.length > 0){
             var rtn = filterClientType(clientType)
             deferred.resolve(rtn)
@@ -175,88 +159,9 @@
         }
         return deferred.promise
       },
-      // getConfig:function(){
-      //   if(window.app.config == {}){
-      //     $http({
-      //          method : "GET",
-      //          url : this.engine + "?cmd=get-config"
-      //      }).then(function mySucces(response) {
-      //           window.app.config = response //(response.data.success)?  buildConfig(response.data.data):{}
-      //          return window.app.config
-      //      }, function myError(response) {
-      //          window.app.config = {}
-      //          return {};
-      //      })
-      //   }else{
-      //     return window.app.config
-      //   }
-      // },
       getUtilityInfo: function(id,utility){
         var deferred = $q.defer()
-        // $timeout( function(){
-        //     deferred.resolve({
-        //         client_info:{
-        //           client_type:'client',
-        //           client_id:1005,
-        //           client_name:'RxETEST',
-        //           client_status:'Active',
-        //           client_insert_datetime:''
-        //         },
-        //         parameters:{
-        //           entity_name:'test',
-        //           entity_type:'test',
-        //           entity_address:'123 road',
-        //           entity_city:'houston',
-        //           entity_state:'tx',
-        //           entity_zip:'77777',
-        //           entity_EIN:'123-4123098',
-        //           bank_name:'wells fargo',
-        //           bank_address:'123 road street',
-        //           bank_city:'sugar land',
-        //           bank_state:'tx',
-        //           bank_zip:'88888',
-        //           bank_account_holder:'mdsccripts',
-        //           bank_account_number:'123123132',
-        //           bank_routing_number_direct_deposit:'12312',
-        //           bank_routing_number_wire:'12312',
-        //           contact_name:'frank',
-        //           contact_position:'president',
-        //           contact_email:'frank@gmail',
-        //           contact_phone:'123-123-1234',
-        //           format_instructions:'testing <b>TEsTING</b> testing',
-        //         },
-        //         documents:[],
-        //         rebate_history:[
-        //           {
-        //             name: 'Point 1',
-        //             y: 24,
-        //           }, {
-        //               name: 'Point 2',
-        //               y: 15
-        //           }, {
-        //               name: 'Point 3',
-        //               y: 18
-        //           }
-        //         ],
-        //         activity:[
-        //           {
-        //               client_id:1005,
-        //               activity_text: "teset change",
-        //               activity_owner: "NWEAVER",
-        //               activity_datetime: "3/12/85"
-        //             },{client_id:1005,
-        //               activity_text: "teset change",
-        //               activity_owner: "NWEAVER",
-        //               activity_datetime: "3/12/85"
-        //             },{client_id:1005,
-        //               activity_text: "teset change",
-        //               activity_owner: "NWEAVER",
-        //               activity_datetime: "3/12/85"
-        //             }
-        //           ]
-        //     })
-        // }, 1000 );
-
+        if(!window.app.production) return mimicAjax(deferred)
           $http({
                method : "GET",
                url : window.app.engine + "?cmd=get-client-info&id="+id
@@ -395,6 +300,7 @@
         data.user_id = window.app.user.user_id
         data = "data=" + encodeURIComponent(JSON.stringify(data))
         var deferred = $q.defer()
+        if(!window.app.production) return mimicAjax(deferred)
         $http({
              method : "POST",
              url : window.app.engine + "?cmd=save-changes",
@@ -411,6 +317,7 @@
       },
       uploadFile: function(file,invalidFile){
         var deferred = $q.defer()
+        if(!window.app.production) return mimicAjax(deferred)
           if(file){
             Upload.upload({
                 url: window.app.engine + "?cmd=upload-file",
@@ -437,6 +344,7 @@
       genericPost: function(cmd,data){
         data.user_id = window.app.user.user_id
         var deferred = $q.defer()
+        if(!window.app.production) return mimicAjax(deferred)
         data = "data=" + encodeURIComponent(JSON.stringify(data))
         $http({
              method : "POST",

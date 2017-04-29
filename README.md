@@ -1,6 +1,6 @@
-# I have no idea what im doing
+# I have no idea what I'm doing
 
-### Running the App during
+### To start the app, run the following
 ```
 live-server --open=app
 ```
