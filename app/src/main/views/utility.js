@@ -241,7 +241,7 @@
           utility:"=utility"
       },
       controller: controller,
-      templateUrl: 'src/main/views/utility.html'
+      template   : require('./utility.html')
   };
  }
 })();

@@ -10,9 +10,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/trix/0.9.2/trix.css">
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
-    <link rel="stylesheet" href="../node_modules/angular-material/angular-material.css"/>
-    <link rel="stylesheet" href="assets/app.css"/>
-    <link rel="stylesheet" href="assets/rxe.css"/>
 
     <style type="text/css">
         /**
@@ -56,51 +53,5 @@
         </md-content>
 
     </div>
-
-    <script src="../node_modules/angular/angular.js"></script>
-    <script src="../node_modules/angular-animate/angular-animate.js"></script>
-    <script src="../node_modules/angular-aria/angular-aria.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/trix/0.9.2/trix.js"></script>
-    <script src="../node_modules/angular-trix/dist/angular-trix.min.js"></script>
-    <script src="../node_modules/ng-file-upload/dist/ng-file-upload-shim.min.js"></script>
-    <script src="../node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
-    <script src="../node_modules/moment/min/moment.min.js"></script>
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script>
-    <script type="text/javascript" src="../node_modules/angular-material/angular-material.js"></script>
-    <script src="./src/lib/highcharts.min.js"></script>
-    <script src="./src/main/main.js"></script>
-    <script src="./src/main/RxEController.js"></script>
-    <script src="./src/main/RxEService.js"></script>
-    <script src="./src/main/views/utility.js"></script>
-    <script src="./src/main/views/claims.js"></script>
-    <script src="./src/lib/united_states.js"></script>
-    <!-- <script src="./src/main/views/employees.js"></script>
-    <script src="./src/main/views/processors.js"></script>
-    <script src="./src/main/views/claims.js"></script> -->
-    <script src="./src/main/views/hc-pie.js"></script>
-
-    <script type="text/javascript">
-
-          angular
-              .module('RxEApp', ['ngMaterial', 'main','ngMdIcons'])
-              .config(function($mdThemingProvider, $mdIconProvider){
-                  $mdIconProvider
-                      .defaultIconSet("./assets/svg/avatars.svg", 128)
-                      .icon("menu"       , "./assets/svg/menu.svg"        , 24)
-                      .icon("share"      , "./assets/svg/share.svg"       , 24)
-                      .icon("google_plus", "./assets/svg/google_plus.svg" , 512)
-                      .icon("hangouts"   , "./assets/svg/hangouts.svg"    , 512)
-                      .icon("twitter"    , "./assets/svg/twitter.svg"     , 512)
-                      .icon("phone"      , "./assets/svg/phone.svg"       , 512);
-
-                      $mdThemingProvider.theme('default')
-                          .primaryPalette('indigo')
-                          .accentPalette('deep-orange');
-
-              });
-
-    </script>
-
   </body>
 </html>

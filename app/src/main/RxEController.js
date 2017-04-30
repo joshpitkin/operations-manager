@@ -37,7 +37,7 @@
     // function makeContact(selectedUser) {
     //     $mdBottomSheet.show({
     //       controllerAs  : "vm",
-    //       templateUrl   : './src/main/views/contactSheet.html',
+    //       template   : require('./contactSheet.html'),
     //       controller    : [ '$mdBottomSheet', ContactSheetController],
     //       parent        : angular.element(document.getElementById('content'))
     //     }).then(function(clickedItem) {

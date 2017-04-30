@@ -168,7 +168,7 @@
           utility:"=utility"
       },
       controller: controller,
-      templateUrl: 'src/main/views/claims.html'
+      template   : require('./claims.html'),
   };
  }
 })();

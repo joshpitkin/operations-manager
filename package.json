@@ -10,27 +10,36 @@
       "url": "https://github.com/angular/material/blob/master/LICENSE"
     }
   ],
-  "peerDependencies": {
-    "angular": "@@>=1.3 <1.6.4",
-    "angular-animate": "@^@>=1.3 <1.6.4",
-    "angular-aria": "@>=1.3 <1.6.4",
-    "angular-messages": "@@>=1.3 <1.6.4"
-  },
   "dependencies": {
     "angular": "^1.5.5",
     "angular-animate": "^1.5.5",
     "angular-aria": "^1.6.4",
-    "angular-material": "^1.3",
+    "angular-material": "^1.1.4",
+    "angular-material-icons": "^0.7.1",
     "angular-messages": "^1.6.3",
     "angular-trix": "^1.0.2",
+    "highcharts": "^5.0.10",
     "moment": "^2.18.1",
     "ng-file-upload": "^12.2.13"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.9",
-    "live-server": "^0.9.1"
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "css-loader": "^0.28.0",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "file-loader": "^0.11.1",
+    "html-loader": "^0.4.5",
+    "html-webpack-plugin": "^2.28.0",
+    "live-server": "^0.9.1",
+    "style-loader": "^0.16.1",
+    "webpack": "^2.4.1",
+    "webpack-dev-server": "^2.4.5"
   },
   "scripts": {
-    "start":"app"
+    "prestart": "npm update",
+    "ls": "live-server --open=app",
+    "dev": "webpack-dev-server",
+    "prod": "webpack --config webpack.prod.config.js"
   }
 }

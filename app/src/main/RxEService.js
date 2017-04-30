@@ -1,5 +1,7 @@
+import moment from 'moment'
 (function(){
   'use strict';
+
   angular.module('main').service('RxEService', ['$q','$rootScope','$http','$mdToast','$mdDialog','$timeout','Upload', RxEService]);
 
   function RxEService($q,$rootScope,$http,$mdToast,$mdDialog,$timeout,Upload){

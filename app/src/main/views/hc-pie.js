@@ -1,3 +1,4 @@
+import Highcharts from 'highcharts'
 (function(){
   angular
        .module('main')
